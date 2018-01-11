@@ -2,6 +2,6 @@
 c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(35): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
 c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(36): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
 c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(37): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\gamelogic\gamelogic.cpp(165): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\gamelogic\gamelogic.cpp(142): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
   SimpleGameEngine.vcxproj -> C:\Users\KG\Documents\Visual Studio 2015\Projects\ComputerGraphics\SimpleGameEngine\Debug\SimpleGameEngine.exe
   SimpleGameEngine.vcxproj -> C:\Users\KG\Documents\Visual Studio 2015\Projects\ComputerGraphics\SimpleGameEngine\Debug\SimpleGameEngine.pdb (Partial PDB)

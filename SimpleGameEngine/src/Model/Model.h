@@ -9,22 +9,23 @@
 #include <assimp\scene.h>
 #include <assimp\postprocess.h>
 #include <glm/glm.hpp>
-
-#include <ShaderProgram/Shader.h>
 #include <Collider/Collider.h>
+#include <ShaderProgram/Shader.h>
+
 #include "Mesh.h"
 
 class Model
 {
 public:
+	
 	Model(std::vector<Mesh> meshes):meshes(meshes){}
 	Model(char *path) {
 		loadModel(path);
-		collider = Collider(xmin, ymin, zmin, xmax, ymax, zmax, this);
+		this->collider = Collider(xmin, ymin, zmin, xmax, ymax, zmax, this);
 	}
 	Model(std::string path) {
 		loadModel(path);
-		collider = Collider(xmin, ymin, zmin, xmax, ymax, zmax, this);
+		this->collider = Collider(xmin, ymin, zmin, xmax, ymax, zmax, this);
 	}
 
 	// You may overwrite these functions
@@ -39,6 +40,7 @@ public:
 	// Maybe useful in collision detection.
 	Collider getCollider() { return this->collider; }
 	~Model();
+	
 protected:
 	std::vector<Mesh> meshes;
 	std::string directory;
@@ -46,6 +48,7 @@ protected:
 										  // Actually we only need Texture.path to use here.
 
 	Collider collider;
+
 	bool first = true;
 	double xmin, ymin, zmin, xmax, ymax, zmax;
 	glm::mat4 modelMatrix;

@@ -3,7 +3,8 @@
 #ifndef SIMPLE_COLLIDER_H
 #define SIMPLE_COLLIDER_H
 
-#include <Model/Model.h>
+//#include <Model/Model.h>
+class Model;
 // For now, a collider is simply a rectangle
 class Collider
 {
@@ -14,7 +15,7 @@ public:
 	double xmin, ymin, zmin, xmax, ymax, zmax;
 
 protected:
-	Model* model;
+	Model *model;
 };
 
 #endif

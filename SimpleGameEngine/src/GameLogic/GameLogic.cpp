@@ -13,6 +13,7 @@ MainGameLogic::MainGameLogic()
 
 	// get a model wearing nanosuit!
 	ourModel = new Model("res/models/nanosuit/nanosuit.obj");
+	//ourModel = new Model("res/models/A-32/a-32_hull.obj");
 	// adjust our model
 	double deltay = -ourModel->getCollider().ymin;
 	ourModel->Translate(glm::vec3(0.0f, deltay, 0.0f));
