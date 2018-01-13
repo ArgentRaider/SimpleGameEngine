@@ -240,6 +240,87 @@ void RenderEngine::setSkyBox(const std::string& _path)
 	haveSky = true;
 }
 
+void RenderEngine::addTerrain(const std::string& path, const std::string& heightMap, const std::string& texture)
+{
+	
+	// load the height map
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load((path+heightMap).c_str(), &width, &height, &nrChannels, 0);
+	if (!data)
+	{
+		std::cout << "Failed to load height map at path: " << path + heightMap << std::endl;
+		stbi_image_free(data);
+	}
+	// calculate the attributes of every vertex
+	glm::vec3* g_terrain[MAP_W*MAP_W];
+	glm::vec3* g_normal[MAP_W*MAP_W];
+	glm::vec2* g_texcoord[MAP_W*MAP_W];
+	std::vector<unsigned int> g_index = std::vector<unsigned int>();
+	int vindex;
+	// calculate except normals
+	for (int z = 0; z < MAP_W; z++)
+	{
+		int n = 0;
+		for (int x = 0; x < MAP_W; x++)
+		{
+			// (z, x)
+			vindex = z*MAP_W + x;
+			g_terrain[vindex] = new glm::vec3(x*MAP_SCALE - MAP_W * MAP_SCALE / 2, data[vindex * 3] / 2-60.0f, z*MAP_SCALE - MAP_W * MAP_SCALE / 2);
+			g_texcoord[vindex] = new glm::vec2(x, z);
+			n++;
+			if (z < MAP_W-1 && n == 2)
+			{
+				g_index.push_back(vindex - 1);
+				g_index.push_back(vindex - 1 + MAP_W);
+				g_index.push_back(vindex);
+				g_index.push_back(vindex - 1 + MAP_W);
+				g_index.push_back(vindex + MAP_W);
+				g_index.push_back(vindex);
+				n = 1;
+			}
+		}
+	}
+	// calculate normals
+	for (int i = 0; i < MAP_W*MAP_W; i++)
+		g_normal[i] = new glm::vec3(0, 0, 0);
+	for(int z=0; z<MAP_W-1; z++)
+		for (int x = 0; x < MAP_W - 1; x++)
+		{
+			vindex = z*MAP_W + x;
+			glm::vec3 normal1 = glm::normalize(glm::cross(*g_terrain[vindex+MAP_W]-*g_terrain[vindex], *g_terrain[vindex+1]-*g_terrain[vindex]));
+			glm::vec3 normal2 = glm::normalize(glm::cross(*g_terrain[vindex + MAP_W + 1] - *g_terrain[vindex + MAP_W], *g_terrain[vindex + 1] - *g_terrain[vindex + MAP_W]));
+			*g_normal[vindex] += normal1;
+			*g_normal[vindex + 1] += normal1;
+			*g_normal[vindex + 1] += normal2;
+			*g_normal[vindex + MAP_W] += normal1;
+			*g_normal[vindex + MAP_W] += normal2;
+			*g_normal[vindex + MAP_W + 1] += normal2;
+		}
+	for (int i = 0; i < MAP_W*MAP_W; i++)
+		*g_normal[i] = glm::normalize(*g_normal[i]);
+
+	/*
+	// create Vertex vector
+	std::vector<Vertex> vertices = std::vector<Vertex>();
+	for (int i = 0; i < MAP_W*MAP_W; i++)
+		vertices.push_back(Vertex(*g_terrain[i], *g_normal[i], *g_texcoord[i]));
+	// create Texture vector
+	unsigned int diffuseMap = Texture::TextureFromFile(texture.c_str(), path);
+	unsigned int specularMap = Texture::TextureFromFile(texture.c_str(), path);
+	std::vector<Texture> textures = std::vector<Texture>();
+	Texture diff; diff.id = diffuseMap; diff.type = Texture::DiffuseType;
+	Texture spec; spec.id = specularMap; spec.type = Texture::SpecularType;
+	textures.push_back(diff);
+	textures.push_back(spec);
+	// add the terrain Model
+	Mesh terrain(vertices, g_index, textures, 0);
+	std::vector<Mesh> meshes;
+	meshes.push_back(terrain);
+	Model* terrainModel = new Model(meshes);
+	RenderEngine::addModel(*terrainModel);
+	*/
+}
+
 void RenderEngine::setCamera(Camera & camera)
 {
 	RenderEngine::camera = &camera;

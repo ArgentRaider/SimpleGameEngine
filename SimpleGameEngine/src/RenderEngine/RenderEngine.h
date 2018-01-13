@@ -11,6 +11,9 @@
 
 #include <GameLogic/GameLogic.h>
 
+#define MAP_W 32
+#define MAP_SCALE 16
+
 typedef std::pair<Model*, const Shader*> ModelAndShader;
 // This is a static class!
 class RenderEngine
@@ -41,6 +44,9 @@ public:
 	
 	// set the sky of scene
 	static void setSkyBox(const std::string& path);
+
+	// add the terrain to the model
+	static void addTerrain(const std::string& path, const std::string& heightMap, const std::string& texture);
 
 	// set camera
 	static void setCamera(Camera& camera);

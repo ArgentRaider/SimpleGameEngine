@@ -47,8 +47,9 @@ MainGameLogic::MainGameLogic()
 	for (glm::vec3 position : pointLightPositions) {
 		RenderEngine::addPointLight(position, defaultAmbient, defaultDiffuse, defaultSpecular, constant, linear, quadratic);
 	}
-
+	
 	// Draw a rectangle using self-defined data
+	
 	Vertex topRight(glm::vec3(50.0f, 0.0f, 50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f)),
 		bottomRight(glm::vec3(50.0f, 0.0f, -50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
 		topLeft(glm::vec3(-50.0f, 0.0f, 50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f)),
@@ -70,6 +71,8 @@ MainGameLogic::MainGameLogic()
 	meshes.push_back(*rectangle);
 	recModel = new Model(meshes);
 	RenderEngine::addModel(*recModel);
+	
+	//RenderEngine::addTerrain("res/textures/", "terrain.bmp", "land.bmp");
 }
 
 MainGameLogic::~MainGameLogic()
