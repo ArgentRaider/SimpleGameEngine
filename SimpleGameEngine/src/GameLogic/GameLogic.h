@@ -49,14 +49,21 @@ private:
 	
 	// Model(s)
 	Model *ourModel;
+	Model *tank1;
+	Model *barrel1;
+	Model *tank2;
+	Model *barrel2;
 	unsigned int diffuseMap;
 	unsigned int specularMap;
 	Mesh* rectangle;
 	Model* recModel;
+	float rotateDelt = 2.0;
 
 	// some settings
 	bool disableCursor = false;
 	bool firstMouse = true;
+
+	void changeTank();
 };
 
 

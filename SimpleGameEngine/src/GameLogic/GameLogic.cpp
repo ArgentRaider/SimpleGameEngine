@@ -12,14 +12,28 @@ MainGameLogic::MainGameLogic()
 	ourShader->init();
 
 	// get a model wearing nanosuit!
-	ourModel = new Model("res/models/nanosuit/nanosuit.obj");
+	tank1 = new Model("res/models/shen/shen.obj");
+	barrel1 = new Model("res/models/barrel/barrel.obj");
+	tank2 = new Model("res/models/shen2/shen2.obj");
+	barrel2 = new Model("res/models/barrel2/barrel2.obj");
+	tank1->addBarrel(barrel1);
+	tank2->addBarrel(barrel2);
+	ourModel = tank1;
 	//ourModel = new Model("res/models/A-32/a-32_hull.obj");
 	// adjust our model
-	double deltay = -ourModel->getCollider().ymin;
-	ourModel->Translate(glm::vec3(0.0f, deltay, 0.0f));
-	ourModel->Scale(glm::vec3(0.2f, 0.2f, 0.2f));
+	double deltay1 = -tank1->getCollider().ymin;
+	tank1->Translate(glm::vec3(0.0f, deltay1, 0.0f));
+	tank1->Scale(glm::vec3(0.2f, 0.2f, 0.2f));
+
+	double deltay2 = -tank2->getCollider().ymin;
+	tank2->Translate(glm::vec3(50.0f, deltay2, 50.0f));
+	tank2->Scale(glm::vec3(0.2f, 0.2f, 0.2f));
+
 	// add it to display
-	RenderEngine::addModel(*ourModel);
+	RenderEngine::addModel(*tank1);
+	RenderEngine::addModel(*barrel1);
+	RenderEngine::addModel(*tank2);
+	RenderEngine::addModel(*barrel2);
 
 	// add a third-person camera following our nanosuit model!
 	camera = new ThirdPersonCamera(*ourModel);
@@ -29,10 +43,11 @@ MainGameLogic::MainGameLogic()
 	// set a soft background color
 	RenderEngine::setBackGround(0.2f, 0.3f, 0.3f);
 	RenderEngine::setSkyBox("res/textures/skybox");
+	RenderEngine::setTerrain("res/textures/", "terrain.bmp", "land.bmp");
 
 	// Set light in Fragment Shader
 	glm::vec3 lightDir(0.8f, 0.6f, 1.0f);
-	glm::vec3 defaultAmbient(0.2f, 0.2f, 0.2f);
+	glm::vec3 defaultAmbient(1.f, 1.0f, 1.0f);
 	glm::vec3 defaultDiffuse(0.5f, 0.5f, 0.5f);
 	glm::vec3 defaultSpecular(1.0f, 1.0f, 1.0f);
 	glm::vec3 pointLightPositions[] = {
@@ -49,7 +64,7 @@ MainGameLogic::MainGameLogic()
 	}
 	
 	// Draw a rectangle using self-defined data
-	
+	/*
 	Vertex topRight(glm::vec3(50.0f, 0.0f, 50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f)),
 		bottomRight(glm::vec3(50.0f, 0.0f, -50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
 		topLeft(glm::vec3(-50.0f, 0.0f, 50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f)),
@@ -71,8 +86,7 @@ MainGameLogic::MainGameLogic()
 	meshes.push_back(*rectangle);
 	recModel = new Model(meshes);
 	RenderEngine::addModel(*recModel);
-	
-	//RenderEngine::addTerrain("res/textures/", "terrain.bmp", "land.bmp");
+	*/
 }
 
 MainGameLogic::~MainGameLogic()
@@ -97,14 +111,35 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 		glfwSetWindowShouldClose(window, true);
 
 	// Move the camera
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		camera->ProcessKeyboard(Camera::FORWARD, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		glm::vec3 shift;
+		shift = glm::normalize(glm::vec3(-ourModel->Front.x, 0.0f, ourModel->Front.z)) * 6.0f * deltaTime;
+		ourModel->Translate(shift);
+		ourModel->shift += shift;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		camera->ProcessKeyboard(Camera::BACKWARD, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera->ProcessKeyboard(Camera::LEFT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera->ProcessKeyboard(Camera::RIGHT, deltaTime);
+		glm::vec3 shift;
+		shift = -glm::normalize(glm::vec3(-ourModel->Front.x, 0.0f, ourModel->Front.z)) * 6.0f * deltaTime;
+		ourModel->Translate(shift);
+		ourModel->shift += shift;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		ourModel->Rotate(rotateDelt, glm::vec3(0, 1.0f, 0));
+		ourModel->backout();
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		ourModel->Rotate(-rotateDelt, glm::vec3(0, 1.0f, 0));
+		ourModel->backout();
+	}
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		ourModel->adjustBarrelUp();
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+		ourModel->adjustBarrelDown();
+
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+		changeTank();
 
 	if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
 		pressB = true;
@@ -143,6 +178,23 @@ void MainGameLogic::MouseCallback(GLFWwindow* window, double xPos, double yPos)
 void MainGameLogic::ScrollCallback(GLFWwindow * window, double xoffset, double yoffset)
 {
 	camera->ProcessMouseScroll(yoffset);
+}
+
+void MainGameLogic::changeTank() {
+	if (ourModel == tank1) {
+		Sleep(100);
+		ourModel = tank2;
+		printf("Tank1\n");
+		camera->changeTank(ourModel);
+	}
+	else if(ourModel == tank2)
+	{
+		Sleep(100);
+		ourModel = tank1;
+		printf("Tank2\n");
+		camera->changeTank(ourModel);
+	}
+
 }
 
 

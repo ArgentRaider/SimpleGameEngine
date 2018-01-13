@@ -45,8 +45,11 @@ public:
 	// set the sky of scene
 	static void setSkyBox(const std::string& path);
 
-	// add the terrain to the model
-	static void addTerrain(const std::string& path, const std::string& heightMap, const std::string& texture);
+	// set the terrain
+	static void setTerrain(const std::string& path, const std::string& heightMap, const std::string& texture);
+
+	// get height
+	static float getHeight(float x, float z);
 
 	// set camera
 	static void setCamera(Camera& camera);
@@ -82,6 +85,7 @@ protected:
 	static float bgR, bgG, bgB;
 	static unsigned int sky, skyVAO, skyVBO;
 	static bool haveSky;
+	static std::vector<Vertex> terrainVertices;
 
 	// caller functions
 	static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);

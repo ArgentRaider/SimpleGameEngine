@@ -19,6 +19,7 @@ unsigned int RenderEngine::sky(0),
 			 RenderEngine::skyVBO(0);
 bool RenderEngine::haveSky = false;
 SkyboxShader RenderEngine::skyboxShader;
+std::vector<Vertex> RenderEngine::terrainVertices = std::vector<Vertex>();
 LightShader RenderEngine::defaultShader(0, 0, 0);
 
 Camera* RenderEngine::camera = nullptr;
@@ -75,7 +76,7 @@ void RenderEngine::run()
 		// input
 		ProcessInput(window, deltaTime);
 
-		glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), RenderEngine::SCR_WIDTH / RenderEngine::SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), RenderEngine::SCR_WIDTH / RenderEngine::SCR_HEIGHT, 0.1f, 500.0f);
 		glm::mat4 view = camera->GetViewMatrix();
 
 		// Draw background
@@ -240,12 +241,11 @@ void RenderEngine::setSkyBox(const std::string& _path)
 	haveSky = true;
 }
 
-void RenderEngine::addTerrain(const std::string& path, const std::string& heightMap, const std::string& texture)
+void RenderEngine::setTerrain(const std::string& path, const std::string& heightMap, const std::string& texture)
 {
-	
 	// load the height map
 	int width, height, nrChannels;
-	unsigned char* data = stbi_load((path+heightMap).c_str(), &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load((path + heightMap).c_str(), &width, &height, &nrChannels, 0);
 	if (!data)
 	{
 		std::cout << "Failed to load height map at path: " << path + heightMap << std::endl;
@@ -265,10 +265,10 @@ void RenderEngine::addTerrain(const std::string& path, const std::string& height
 		{
 			// (z, x)
 			vindex = z*MAP_W + x;
-			g_terrain[vindex] = new glm::vec3(x*MAP_SCALE - MAP_W * MAP_SCALE / 2, data[vindex * 3] / 2-60.0f, z*MAP_SCALE - MAP_W * MAP_SCALE / 2);
+			g_terrain[vindex] = new glm::vec3(x*MAP_SCALE - MAP_W * MAP_SCALE / 2, data[vindex * 3] / 2, z*MAP_SCALE - MAP_W * MAP_SCALE / 2);
 			g_texcoord[vindex] = new glm::vec2(x, z);
 			n++;
-			if (z < MAP_W-1 && n == 2)
+			if (z < MAP_W - 1 && n == 2)
 			{
 				g_index.push_back(vindex - 1);
 				g_index.push_back(vindex - 1 + MAP_W);
@@ -280,14 +280,15 @@ void RenderEngine::addTerrain(const std::string& path, const std::string& height
 			}
 		}
 	}
+	stbi_image_free(data);
 	// calculate normals
 	for (int i = 0; i < MAP_W*MAP_W; i++)
 		g_normal[i] = new glm::vec3(0, 0, 0);
-	for(int z=0; z<MAP_W-1; z++)
+	for (int z = 0; z<MAP_W - 1; z++)
 		for (int x = 0; x < MAP_W - 1; x++)
 		{
 			vindex = z*MAP_W + x;
-			glm::vec3 normal1 = glm::normalize(glm::cross(*g_terrain[vindex+MAP_W]-*g_terrain[vindex], *g_terrain[vindex+1]-*g_terrain[vindex]));
+			glm::vec3 normal1 = glm::normalize(glm::cross(*g_terrain[vindex + MAP_W] - *g_terrain[vindex], *g_terrain[vindex + 1] - *g_terrain[vindex]));
 			glm::vec3 normal2 = glm::normalize(glm::cross(*g_terrain[vindex + MAP_W + 1] - *g_terrain[vindex + MAP_W], *g_terrain[vindex + 1] - *g_terrain[vindex + MAP_W]));
 			*g_normal[vindex] += normal1;
 			*g_normal[vindex + 1] += normal1;
@@ -298,12 +299,9 @@ void RenderEngine::addTerrain(const std::string& path, const std::string& height
 		}
 	for (int i = 0; i < MAP_W*MAP_W; i++)
 		*g_normal[i] = glm::normalize(*g_normal[i]);
-
-	/*
 	// create Vertex vector
-	std::vector<Vertex> vertices = std::vector<Vertex>();
 	for (int i = 0; i < MAP_W*MAP_W; i++)
-		vertices.push_back(Vertex(*g_terrain[i], *g_normal[i], *g_texcoord[i]));
+		terrainVertices.push_back(Vertex(*g_terrain[i], *g_normal[i], *g_texcoord[i]));
 	// create Texture vector
 	unsigned int diffuseMap = Texture::TextureFromFile(texture.c_str(), path);
 	unsigned int specularMap = Texture::TextureFromFile(texture.c_str(), path);
@@ -313,12 +311,34 @@ void RenderEngine::addTerrain(const std::string& path, const std::string& height
 	textures.push_back(diff);
 	textures.push_back(spec);
 	// add the terrain Model
-	Mesh terrain(vertices, g_index, textures, 0);
+	Mesh terrain(terrainVertices, g_index, textures, 32.0f);
 	std::vector<Mesh> meshes;
 	meshes.push_back(terrain);
 	Model* terrainModel = new Model(meshes);
-	RenderEngine::addModel(*terrainModel);
-	*/
+	addModel(*terrainModel);
+}
+
+float RenderEngine::getHeight(float x, float z)
+{
+	float leftBorder = -MAP_W*MAP_SCALE / 2;
+	float rightBorder = MAP_W*MAP_SCALE / 2 - MAP_SCALE;
+	if (x<leftBorder || x>rightBorder || z<leftBorder || z>rightBorder)
+		return 0.0f;
+	// convert to coordinate in the height map
+	float mapX = (x + MAP_W*MAP_SCALE / 2) / MAP_SCALE;
+	float mapZ = (z + MAP_W*MAP_SCALE / 2) / MAP_SCALE;
+	int col0 = (int)mapX;
+	int col1 = (col0 == MAP_W - 1) ? col0 : (col0 + 1);
+	int row0 = (int)mapZ;
+	int row1 = (row0 == MAP_W - 1) ? row0 : (row0 + 1);
+	float h00 = terrainVertices[row0*MAP_W + col0].Position.y;
+	float h01 = terrainVertices[row0*MAP_W + col1].Position.y;
+	float h10 = terrainVertices[row1*MAP_W + col0].Position.y;
+	float h11 = terrainVertices[row1*MAP_W + col1].Position.y;
+	// Bilinear Interpolation
+	float tx = mapX - col0;
+	float ty = mapZ - row0;
+	return h00*(1 - tx)*(1 - ty) + h01*(tx - tx*ty) + h10*(ty - tx*ty) + h11*tx*ty;
 }
 
 void RenderEngine::setCamera(Camera & camera)

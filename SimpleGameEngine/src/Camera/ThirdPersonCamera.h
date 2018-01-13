@@ -47,17 +47,17 @@ public:
 		float velocity = camera.MovementSpeed * deltaTime;
 		glm::vec3 shift;
 		if (direction == Camera::FORWARD)
-			shift = glm::normalize(glm::vec3(camera.Front.x, 0.0f, camera.Front.z)) * velocity;
+			shift = glm::normalize(glm::vec3(-person.Front.x, 0.0f, person.Front.z)) * velocity;
 		else if (direction == Camera::BACKWARD)
-			shift = -glm::normalize(glm::vec3(camera.Front.x, 0.0f, camera.Front.z)) * velocity;
-		else if (direction == Camera::LEFT)
-			shift = -glm::normalize(glm::vec3(camera.Right.x, 0.0f, camera.Right.z)) * velocity;
-		else if (direction == Camera::RIGHT)
-			shift = glm::normalize(glm::vec3(camera.Right.x, 0.0f, camera.Right.z)) * velocity;
+			shift = -glm::normalize(glm::vec3(-person.Front.x, 0.0f, person.Front.z)) * velocity;
+		else if (direction == Camera::LEFT);
+			
+		else if (direction == Camera::RIGHT);
+		
 		camera.Position += shift;
 		center += shift;
 		Position = camera.Position;
-		person.Translate(shift);
+	
 	}
 
 	void ProcessMouseMovement(float xoffset, float yoffset)
@@ -84,6 +84,10 @@ public:
 		Position = camera.Position;
 	}
 
+	void changeTank(Model *p) {
+		person = *p;
+		Init();
+	}
 };
 
 #endif
