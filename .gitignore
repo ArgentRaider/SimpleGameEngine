@@ -1,4 +1,7 @@
 Debug/
 Release/
+*.vs
+*.db
+*.exe
 SimpleGameEngine/Debug/
 .vs/

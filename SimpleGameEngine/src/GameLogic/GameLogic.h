@@ -7,6 +7,7 @@
 #include <ShaderProgram/Shader.h>
 #include <Model/Model.h>
 #include <Model/Mesh.h>
+#include <Model/Tank/Tank.h>
 #include <Camera/ThirdPersonCamera.h>
 
 // Abstract class GameLogic
@@ -44,20 +45,29 @@ private:
 	LightShader *ourShader;
 
 	// Camera(s)
-	ThirdPersonCamera *camera;
+	ThirdPersonCamera *currentCamera;
+	ThirdPersonCamera *camera1;
+	ThirdPersonCamera *camera2;
 	//Camera *camera;
 	
 	// Model(s)
-	Model *ourModel;
+	Tank *ourModel;
+	Tank *tank1;
+	Model *barrel1;
+	Tank *tank2;
+	Model *barrel2;
 	unsigned int diffuseMap;
 	unsigned int specularMap;
 	unsigned int normalMap;
 	Mesh* rectangle;
 	Model* recModel;
+	float rotateDelt = 2.0;
 
 	// some settings
 	bool disableCursor = false;
 	bool firstMouse = true;
+
+	void changeTank();
 };
 
 

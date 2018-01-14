@@ -17,14 +17,25 @@
 class Model
 {
 public:
+	glm::vec4 Front;
+	std::vector<Mesh> meshes;
+	glm::mat4 modelMatrix;
+	glm::vec3 shift;
 	
-	Model(std::vector<Mesh> meshes, bool hasNormalMap) :meshes(meshes), has_normal_map(hasNormalMap) { }
+
+	Model(std::vector<Mesh> meshes, bool hasNormalMap = false) :meshes(meshes), has_normal_map(hasNormalMap) { }
+	Model (){}
+
 	Model(char *path) {
 		loadModel(path);
+		Front = { 0.0, 0.0, -1.0, 1.0 };
+		shift = { 0.0, 0.0, 0.0 };
 		this->collider = Collider(xmin, ymin, zmin, xmax, ymax, zmax, this);
 	}
 	Model(std::string path) {
 		loadModel(path);
+		Front = { 0.0, 0.0, -1.0, 1.0 };
+		shift = { 0.0, 0.0, 0.0 };
 		this->collider = Collider(xmin, ymin, zmin, xmax, ymax, zmax, this);
 	}
 
@@ -39,6 +50,9 @@ public:
 	glm::mat4 getModelMatrix() { return this->modelMatrix; }
 	// Maybe useful in collision detection.
 	Collider getCollider() { return this->collider; }
+
+	float rot = 0.0f;
+
 	~Model();
 
 	
@@ -47,7 +61,7 @@ public:
 	bool hasNormalMap() { return this->has_normal_map; }
 	
 protected:
-	std::vector<Mesh> meshes;
+
 	std::string directory;
 	std::vector<Texture> textures_loaded; // To avoid reloading the same texture for multiple times.
 										  // Actually we only need Texture.path to use here.
@@ -59,7 +73,7 @@ protected:
 	bool active = true;
 
 	double xmin, ymin, zmin, xmax, ymax, zmax;
-	glm::mat4 modelMatrix;
+
 
 	void loadModel(std::string path);
 	void processNode(aiNode *node, const aiScene *scene);
@@ -68,9 +82,9 @@ protected:
 		std::string typeName);
 
 
+
 	bool first = true;					// simply for calculating collider
 };
 #endif
-
 
 

@@ -19,6 +19,7 @@ void Model::Translate(glm::vec3 mov)
 void Model::Scale(glm::vec3 scale)
 {
 	this->modelMatrix = glm::scale(glm::mat4(), scale) * this->modelMatrix;
+
 }
 
 void Model::Rotate(float angle, glm::vec3 axis)
@@ -27,7 +28,14 @@ void Model::Rotate(float angle, glm::vec3 axis)
 	// Since we always want the model to rotate in its local coordinate system, 
 	//	not in the world coordinate system!
 	this->modelMatrix = glm::rotate(this->modelMatrix, glm::radians(angle), axis);
+	glm::mat4 temp;
+	temp = glm::rotate(temp, glm::radians(angle), axis);
+	this->Front = glm::normalize(this->Front * temp);
 }
+
+
+
+
 
 Model::~Model()
 {
@@ -207,3 +215,4 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
 	}
 	return textures;
 }
+
