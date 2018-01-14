@@ -12,6 +12,8 @@ struct Vertex {
 	glm::vec3 Position;
 	glm::vec3 Normal;
 	glm::vec2 TexCoords;
+	glm::vec3 Tangent;
+	glm::vec3 Bitangent;
 	Vertex(){}
 	Vertex(glm::vec3 pos, glm::vec3 norm, glm::vec2 texcoord):Position(pos),Normal(norm),TexCoords(texcoord){}
 };
@@ -19,6 +21,7 @@ struct Vertex {
 struct Texture {
 	static const std::string DiffuseType;
 	static const std::string SpecularType; 
+	static const std::string NormalType;
 	unsigned int id;
 	std::string type = std::string();
 	std::string path = std::string();

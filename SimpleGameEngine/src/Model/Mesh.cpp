@@ -5,7 +5,7 @@
 
 const std::string Texture::DiffuseType = "texture_diffuse";
 const std::string Texture::SpecularType = "texture_specular";
-
+const std::string Texture::NormalType = "texture_normal";
 
 Mesh::Mesh(	std::vector<Vertex> vertices, 
 			std::vector<unsigned int> indices, 
@@ -39,6 +39,12 @@ void Mesh::setupMesh(){
 	// vertex texture coords
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+	// vertex tangent
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+	// vertex bitangent
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 	
 	glBindVertexArray(0);
 }
@@ -46,16 +52,19 @@ void Mesh::setupMesh(){
 void Mesh::Draw(const Shader& shader){
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
+	unsigned int normalNr = 1;
 	for(unsigned int i = 0; i < textures.size(); i++) {
 		glActiveTexture(GL_TEXTURE0 + i);
 		
 		std::stringstream ss;
 		std::string number;
 		std::string type = textures[i].type;
-		if(type == Texture::DiffuseType)
+		if (type == Texture::DiffuseType)
 			ss << diffuseNr++;
 		else if (type == Texture::SpecularType)
 			ss << specularNr++;
+		else if (type == Texture::NormalType)
+			ss << normalNr++;
 		ss >> number;
 		
 		shader.setInt(("material." + type + number).c_str(), i);

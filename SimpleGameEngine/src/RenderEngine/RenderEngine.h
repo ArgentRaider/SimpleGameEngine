@@ -45,6 +45,9 @@ public:
 	// set camera
 	static void setCamera(Camera& camera);
 
+	// set normal map option
+	static void setNormalMapRender(bool set);
+
 	// adjust models to display
 	static void addModel(Model& model, const Shader& shader = defaultShader);
 	static bool deleteModel(Model& model);
@@ -76,6 +79,7 @@ protected:
 	static float bgR, bgG, bgB;
 	static unsigned int sky, skyVAO, skyVBO;
 	static bool haveSky;
+	static bool useNormalMap;
 
 	// caller functions
 	static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);

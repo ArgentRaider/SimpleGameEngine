@@ -51,6 +51,7 @@ private:
 	Model *ourModel;
 	unsigned int diffuseMap;
 	unsigned int specularMap;
+	unsigned int normalMap;
 	Mesh* rectangle;
 	Model* recModel;
 

@@ -18,6 +18,7 @@ unsigned int RenderEngine::sky(0),
 			 RenderEngine::skyVAO(0), 
 			 RenderEngine::skyVBO(0);
 bool RenderEngine::haveSky = false;
+bool RenderEngine::useNormalMap = false;
 SkyboxShader RenderEngine::skyboxShader;
 LightShader RenderEngine::defaultShader(0, 0, 0);
 
@@ -100,8 +101,12 @@ void RenderEngine::run()
 		// Draw models
 		for (ModelAndShader m : models) {
 			Model* mod = m.first;
+			if (!(mod->isActive()))
+				continue;
 			const Shader* shader = m.second;
 			shader->use();
+
+			shader->setBool("useNormalMap", useNormalMap && mod->hasNormalMap());
 
 			shader->setMat4("projection", projection);
 			shader->setMat4("view", view);
@@ -243,6 +248,11 @@ void RenderEngine::setSkyBox(const std::string& _path)
 void RenderEngine::setCamera(Camera & camera)
 {
 	RenderEngine::camera = &camera;
+}
+
+void RenderEngine::setNormalMapRender(bool set)
+{
+	useNormalMap = set;
 }
 
 void RenderEngine::addModel(Model & model, const Shader& shader)

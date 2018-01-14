@@ -1,5 +1,6 @@
 #include "Model.h"
 
+#include <cassert>
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -35,7 +36,7 @@ Model::~Model()
 void Model::loadModel(std::string path) 
 {
 	Assimp::Importer importer;
-	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 		std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
 		return;
@@ -91,9 +92,14 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 			else if (zmax < vector.z) zmax = vector.z;
 		}
 
-		vector.x = mesh->mNormals[i].x;
-		vector.y = mesh->mNormals[i].y;
-		vector.z = mesh->mNormals[i].z;
+		if (mesh->mNormals) {	// Some obj may not contain normal vectors, causing mesh->mNormals to be null
+			vector.x = mesh->mNormals[i].x;
+			vector.y = mesh->mNormals[i].y;
+			vector.z = mesh->mNormals[i].z;
+		}
+		else {					// with normal to be 0 vector, the model CANNOT be rendered correctly!!!
+			vector = { 0, 0, 0 };
+		}
 		vertex.Normal = vector;
 
 		if (mesh->mTextureCoords[0]) {		// If there exists texcoords, we take the first group
@@ -107,20 +113,52 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 			vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 		}
 
+		// tangent
+		vector.x = mesh->mTangents[i].x;
+		vector.y = mesh->mTangents[i].y;
+		vector.z = mesh->mTangents[i].z;
+		// bitangent
+		vector.x = mesh->mBitangents[i].x;
+		vector.y = mesh->mBitangents[i].y;
+		vector.z = mesh->mBitangents[i].z;
+
 		vertices.push_back(vertex);
 	}
 	// deal with index
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
 		aiFace face = mesh->mFaces[i];
+#ifndef NDEBUG
+		assert(face.mNumIndices == 3);
+#endif // !NDEBUG
 		for (unsigned int j = 0; j < face.mNumIndices; j++) {
 			indices.push_back(face.mIndices[j]);
 		}
+		// now we can calculate Tangent and Bitangent on our own!!!
+		Vertex& p1 = vertices[face.mIndices[0]];
+		Vertex& p2 = vertices[face.mIndices[1]];
+		Vertex& p3 = vertices[face.mIndices[2]];
+		glm::vec3 edge1 = p2.Position - p1.Position;
+		glm::vec3 edge2 = p3.Position - p1.Position;
+		glm::vec2 deltaUV1 = p2.TexCoords - p1.TexCoords;
+		glm::vec2 deltaUV2 = p3.TexCoords - p1.TexCoords;
+		float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+		glm::vec3 tangent;
+		tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+		tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+		tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+		glm::vec3 bitangent;
+		bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+		bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+		bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+		p1.Tangent = tangent;	p2.Tangent = tangent;	p3.Tangent = tangent;
+		p1.Bitangent = bitangent;	p2.Bitangent = bitangent;	p3.Bitangent = bitangent;
 	}
 
 	// deal with materials
 	if (mesh->mMaterialIndex >= 0) {
 		aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 		material->Get(AI_MATKEY_SHININESS, shininess);
+		shininess /= 10;
 
 		std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, 
 																Texture::DiffuseType);
@@ -129,6 +167,16 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 		std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR,
 																Texture::SpecularType);
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
+		std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT,
+																Texture::NormalType);
+		if (normalMaps.size() == 0) {
+			has_normal_map = false;
+		}
+		else {
+			has_normal_map = true;
+			textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+		}
 	}
 	
 	return Mesh(vertices, indices, textures, shininess);

@@ -18,7 +18,7 @@ class Model
 {
 public:
 	
-	Model(std::vector<Mesh> meshes):meshes(meshes){}
+	Model(std::vector<Mesh> meshes, bool hasNormalMap) :meshes(meshes), has_normal_map(hasNormalMap) { }
 	Model(char *path) {
 		loadModel(path);
 		this->collider = Collider(xmin, ymin, zmin, xmax, ymax, zmax, this);
@@ -40,16 +40,24 @@ public:
 	// Maybe useful in collision detection.
 	Collider getCollider() { return this->collider; }
 	~Model();
+
+	
+	bool isActive() { return this->active; }
+	void setActive(bool b) { this->active = b; }
+	bool hasNormalMap() { return this->has_normal_map; }
 	
 protected:
 	std::vector<Mesh> meshes;
 	std::string directory;
 	std::vector<Texture> textures_loaded; // To avoid reloading the same texture for multiple times.
 										  // Actually we only need Texture.path to use here.
+	
+	bool has_normal_map;
 
 	Collider collider;
+	
+	bool active = true;
 
-	bool first = true;
 	double xmin, ymin, zmin, xmax, ymax, zmax;
 	glm::mat4 modelMatrix;
 
@@ -58,6 +66,9 @@ protected:
 	Mesh processMesh(aiMesh *mesh, const aiScene *scene);
 	std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
 		std::string typeName);
+
+
+	bool first = true;					// simply for calculating collider
 };
 #endif
 
