@@ -265,7 +265,7 @@ void RenderEngine::setTerrain(const std::string& path, const std::string& height
 		{
 			// (z, x)
 			vindex = z*MAP_W + x;
-			g_terrain[vindex] = new glm::vec3(x*MAP_SCALE - MAP_W * MAP_SCALE / 2, data[vindex * 3] / 2, z*MAP_SCALE - MAP_W * MAP_SCALE / 2);
+			g_terrain[vindex] = new glm::vec3(x*MAP_SCALE - MAP_W * MAP_SCALE / 2, data[vindex * 3] / 3, z*MAP_SCALE - MAP_W * MAP_SCALE / 2);
 			g_texcoord[vindex] = new glm::vec2(x, z);
 			n++;
 			if (z < MAP_W - 1 && n == 2)

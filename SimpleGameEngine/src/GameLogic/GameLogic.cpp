@@ -14,19 +14,23 @@ MainGameLogic::MainGameLogic()
 	// get a model wearing nanosuit!
 	tank1 = new Model("res/models/shen/shen.obj");
 	barrel1 = new Model("res/models/barrel/barrel.obj");
+	tank1->setShift(0, 81, 0);
+	barrel1->setShift(0, 81, 0);
 	tank2 = new Model("res/models/shen2/shen2.obj");
 	barrel2 = new Model("res/models/barrel2/barrel2.obj");
+	tank2->setShift(10, 80.14, 10);
+	barrel2->setShift(10, 80.14, 10);
 	tank1->addBarrel(barrel1);
 	tank2->addBarrel(barrel2);
 	ourModel = tank1;
 	//ourModel = new Model("res/models/A-32/a-32_hull.obj");
 	// adjust our model
 	double deltay1 = -tank1->getCollider().ymin;
-	tank1->Translate(glm::vec3(0.0f, deltay1, 0.0f));
+	tank1->Translate(glm::vec3(0.0f, deltay1+81/0.2, 0.0f));
 	tank1->Scale(glm::vec3(0.2f, 0.2f, 0.2f));
 
 	double deltay2 = -tank2->getCollider().ymin;
-	tank2->Translate(glm::vec3(50.0f, deltay2, 50.0f));
+	tank2->Translate(glm::vec3(50.0f, deltay2+80.14/0.2, 50.0f));
 	tank2->Scale(glm::vec3(0.2f, 0.2f, 0.2f));
 
 	tank1->Rotate(180, glm::vec3(0.0, 1.0, 0.0));
@@ -49,7 +53,7 @@ MainGameLogic::MainGameLogic()
 	// set a soft background color
 	RenderEngine::setBackGround(0.2f, 0.3f, 0.3f);
 	RenderEngine::setSkyBox("res/textures/skybox");
-	//RenderEngine::setTerrain("res/textures/", "terrain.bmp", "land.bmp");
+	RenderEngine::setTerrain("res/textures/", "terrain.bmp", "land.bmp");
 
 	// Set light in Fragment Shader
 	glm::vec3 lightDir(0.8f, 0.6f, 1.0f);
@@ -70,7 +74,7 @@ MainGameLogic::MainGameLogic()
 	}
 	
 	// Draw a rectangle using self-defined data
-	
+	/*
 	Vertex topRight(glm::vec3(50.0f, 0.0f, 50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f)),
 		bottomRight(glm::vec3(50.0f, 0.0f, -50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
 		topLeft(glm::vec3(-50.0f, 0.0f, 50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f)),
@@ -92,7 +96,7 @@ MainGameLogic::MainGameLogic()
 	meshes.push_back(*rectangle);
 	recModel = new Model(meshes);
 	RenderEngine::addModel(*recModel);
-	
+	*/
 }
 
 MainGameLogic::~MainGameLogic()
@@ -120,17 +124,25 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 	// Move the camera
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		currentCamera->ProcessKeyboard(Camera::FORWARD, deltaTime);
-		glm::vec3 shift;
-		shift = glm::normalize(glm::vec3(-ourModel->Front.x, 0.0f, ourModel->Front.z)) * 6.0f * deltaTime;
-		ourModel->Translate(shift);
-		ourModel->shift += shift;
+		float x0 = ourModel->shift.x;
+		float y0 = ourModel->shift.y;
+		float z0 = ourModel->shift.z;
+		float x1 = ourModel->shift.x - ourModel->Front.x * 6.0f * deltaTime;
+		float z1 = ourModel->shift.z + ourModel->Front.z * 6.0f * deltaTime;
+		float y1 = RenderEngine::getHeight(x1, z1);
+		ourModel->Translate(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
+		ourModel->shift=glm::vec3(x1,y1,z1);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		currentCamera->ProcessKeyboard(Camera::BACKWARD, deltaTime);
-		glm::vec3 shift;
-		shift = -glm::normalize(glm::vec3(-ourModel->Front.x, 0.0f, ourModel->Front.z)) * 6.0f * deltaTime;
-		ourModel->Translate(shift);
-		ourModel->shift += shift;
+		float x0 = ourModel->shift.x;
+		float y0 = ourModel->shift.y;
+		float z0 = ourModel->shift.z;
+		float x1 = ourModel->shift.x + ourModel->Front.x * 6.0f * deltaTime;
+		float z1 = ourModel->shift.z - ourModel->Front.z * 6.0f * deltaTime;
+		float y1 = RenderEngine::getHeight(x1, z1);
+		ourModel->Translate(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
+		ourModel->shift = glm::vec3(x1, y1, z1);
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		ourModel->Rotate(rotateDelt, glm::vec3(0, 1.0f, 0));

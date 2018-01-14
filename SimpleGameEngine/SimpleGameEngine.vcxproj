@@ -121,6 +121,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\BasicComp\BasicComp.cpp" />
     <ClCompile Include="src\Collider\Collider.cpp" />
     <ClCompile Include="src\GameLogic\GameLogic.cpp" />
     <ClCompile Include="src\glad.c" />
@@ -131,6 +132,7 @@
     <ClCompile Include="src\ShaderProgram\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BasicComp\BasicComp.h" />
     <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\Camera\ThirdPersonCamera.h" />
     <ClInclude Include="src\Collider\Collider.h" />

@@ -10,6 +10,7 @@
 #include <GLFW/glfw3.h>
 
 #include <GameLogic/GameLogic.h>
+#include <BasicComp/BasicComp.h>
 
 #define MAP_W 32
 #define MAP_SCALE 16
