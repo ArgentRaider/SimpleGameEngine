@@ -16,23 +16,23 @@ MainGameLogic::MainGameLogic()
 	// get a model wearing nanosuit!
 	tank1 = new Tank("res/models/shen/shen.obj");
 	barrel1 = new Model("res/models/barrel/barrel.obj");
-	tank1->setShift(0, 81, 0);
-	barrel1->setShift(0, 81, 0);
+	tank1->setShift(0, 30, 0);
+	barrel1->setShift(0, 30, 0);
 	tank2 = new Tank("res/models/shen2/shen2.obj");
 	barrel2 = new Model("res/models/barrel2/barrel2.obj");
-	tank2->setShift(10, 80.14, 10);
-	barrel2->setShift(10, 80.14, 10);
+	tank2->setShift(10, 29.25, 10);
+	barrel2->setShift(10, 29.25, 10);
 	tank1->addBarrel(barrel1);
 	tank2->addBarrel(barrel2);
 	ourModel = tank1;
 	//ourModel = new Model("res/models/A-32/a-32_hull.obj");
 	// adjust our model
 	double deltay1 = -tank1->getCollider().ymin;
-	tank1->Translate(glm::vec3(0.0f, deltay1+81/0.2, 0.0f));
+	tank1->Translate(glm::vec3(0.0f, deltay1+30/0.2, 0.0f));
 	tank1->Scale(glm::vec3(0.2f, 0.2f, 0.2f));
 
 	double deltay2 = -tank2->getCollider().ymin;
-	tank2->Translate(glm::vec3(50.0f, deltay2+80.14/0.2, 50.0f));
+	tank2->Translate(glm::vec3(50.0f, deltay2+29.25/0.2, 50.0f));
 	tank2->Scale(glm::vec3(0.2f, 0.2f, 0.2f));
 
 	tank1->Rotate(180, glm::vec3(0.0, 1.0, 0.0));

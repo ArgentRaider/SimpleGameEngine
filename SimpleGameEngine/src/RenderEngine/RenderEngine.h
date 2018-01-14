@@ -13,7 +13,7 @@
 #include <BasicComp/BasicComp.h>
 
 #define MAP_W 32
-#define MAP_SCALE 16
+#define MAP_SCALE 8
 
 typedef std::pair<Model*, const Shader*> ModelAndShader;
 // This is a static class!

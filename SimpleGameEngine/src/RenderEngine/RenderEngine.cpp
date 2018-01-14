@@ -270,7 +270,7 @@ void RenderEngine::setTerrain(const std::string& path, const std::string& height
 		{
 			// (z, x)
 			vindex = z*MAP_W + x;
-			g_terrain[vindex] = new glm::vec3(x*MAP_SCALE - MAP_W * MAP_SCALE / 2, data[vindex * 3] / 3, z*MAP_SCALE - MAP_W * MAP_SCALE / 2);
+			g_terrain[vindex] = new glm::vec3(x*MAP_SCALE - MAP_W * MAP_SCALE / 2, data[vindex * 3] / 8, z*MAP_SCALE - MAP_W * MAP_SCALE / 2);
 			g_texcoord[vindex] = new glm::vec2(x, z);
 			n++;
 			if (z < MAP_W - 1 && n == 2)
@@ -340,10 +340,17 @@ float RenderEngine::getHeight(float x, float z)
 	float h01 = terrainVertices[row0*MAP_W + col1].Position.y;
 	float h10 = terrainVertices[row1*MAP_W + col0].Position.y;
 	float h11 = terrainVertices[row1*MAP_W + col1].Position.y;
-	// Bilinear Interpolation
 	float tx = mapX - col0;
-	float ty = mapZ - row0;
-	return h00*(1 - tx)*(1 - ty) + h01*(tx - tx*ty) + h10*(ty - tx*ty) + h11*tx*ty;
+	float tz = mapZ - row0;
+	// interpolation
+	if (tx + tz < 1)
+	{
+		return (1 - tx - tz)*h00 + tx*h01 + tz*h10;
+	}
+	else
+	{
+		return (tx + tz - 1)*h11 + (1 - tx)*h10 + (1 - tz)*h01;
+	}
 }
 
 void RenderEngine::setCamera(Camera & camera)
