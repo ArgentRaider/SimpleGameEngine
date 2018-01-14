@@ -123,24 +123,26 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 
 	// Move the camera
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		currentCamera->ProcessKeyboard(Camera::FORWARD, deltaTime);
+		
 		float x0 = ourModel->shift.x;
 		float y0 = ourModel->shift.y;
 		float z0 = ourModel->shift.z;
 		float x1 = ourModel->shift.x - ourModel->Front.x * 6.0f * deltaTime;
 		float z1 = ourModel->shift.z + ourModel->Front.z * 6.0f * deltaTime;
 		float y1 = RenderEngine::getHeight(x1, z1);
+		currentCamera->ProcessKeyboard(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
 		ourModel->Translate(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
 		ourModel->shift=glm::vec3(x1,y1,z1);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		currentCamera->ProcessKeyboard(Camera::BACKWARD, deltaTime);
+
 		float x0 = ourModel->shift.x;
 		float y0 = ourModel->shift.y;
 		float z0 = ourModel->shift.z;
 		float x1 = ourModel->shift.x + ourModel->Front.x * 6.0f * deltaTime;
 		float z1 = ourModel->shift.z - ourModel->Front.z * 6.0f * deltaTime;
 		float y1 = RenderEngine::getHeight(x1, z1);
+		currentCamera->ProcessKeyboard(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
 		ourModel->Translate(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
 		ourModel->shift = glm::vec3(x1, y1, z1);
 	}

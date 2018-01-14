@@ -42,17 +42,19 @@ public:
 
 	glm::mat4 GetViewMatrix() { return camera.GetViewMatrix(); }
 
-	void ProcessKeyboard(Camera::Camera_Movement direction, float deltaTime)
+	void ProcessKeyboard(glm::vec3 shift)
 	{
-		float velocity = camera.MovementSpeed * deltaTime;
-		glm::vec3 shift;
-		if (direction == Camera::FORWARD)
-			shift = glm::normalize(glm::vec3(-person.Front.x, 0.0f, person.Front.z)) * velocity;
-		else if (direction == Camera::BACKWARD)
-			shift = -glm::normalize(glm::vec3(-person.Front.x, 0.0f, person.Front.z)) * velocity;
-		else if (direction == Camera::LEFT);
-			
-		else if (direction == Camera::RIGHT);
+		//Camera::Camera_Movement direction
+
+		//float velocity = camera.MovementSpeed * deltaTime;
+		//glm::vec3 shift;
+		//if (direction == Camera::FORWARD)
+		//	shift = glm::normalize(glm::vec3(-person.Front.x, 0.0f, person.Front.z)) * velocity;
+		//else if (direction == Camera::BACKWARD)
+		//	shift = -glm::normalize(glm::vec3(-person.Front.x, 0.0f, person.Front.z)) * velocity;
+		//else if (direction == Camera::LEFT);
+		//	
+		//else if (direction == Camera::RIGHT);
 		
 		camera.Position += shift;
 		center += shift;
