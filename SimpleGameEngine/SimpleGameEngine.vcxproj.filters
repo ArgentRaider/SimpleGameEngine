@@ -39,7 +39,11 @@
     <ClCompile Include="src\RenderEngine\RenderEngine.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="src\Model\Tank\Tank.cpp">
+=======
+    <ClCompile Include="src\BasicComp\BasicComp.cpp">
+>>>>>>> origin/master
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,7 +72,11 @@
     <ClInclude Include="src\RenderEngine\RenderEngine.h">
       <Filter>头文件</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="src\Model\Tank\Tank.h">
+=======
+    <ClInclude Include="src\BasicComp\BasicComp.h">
+>>>>>>> origin/master
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
