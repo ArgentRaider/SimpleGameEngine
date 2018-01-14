@@ -20,8 +20,8 @@ MainGameLogic::MainGameLogic()
 	barrel1->setShift(0, 30, 0);
 	tank2 = new Tank("res/models/shen2/shen2.obj");
 	barrel2 = new Model("res/models/barrel2/barrel2.obj");
-	tank2->setShift(10, 29.25, 10);
-	barrel2->setShift(10, 29.25, 10);
+	tank2->setShift(10, 29.625, 10);
+	barrel2->setShift(10, 29.625, 10);
 	tank1->addBarrel(barrel1);
 	tank2->addBarrel(barrel2);
 	ourModel = tank1;
@@ -32,7 +32,7 @@ MainGameLogic::MainGameLogic()
 	tank1->Scale(glm::vec3(0.2f, 0.2f, 0.2f));
 
 	double deltay2 = -tank2->getCollider().ymin;
-	tank2->Translate(glm::vec3(50.0f, deltay2+29.25/0.2, 50.0f));
+	tank2->Translate(glm::vec3(50.0f, deltay2+29.625/0.2, 50.0f));
 	tank2->Scale(glm::vec3(0.2f, 0.2f, 0.2f));
 
 	tank1->Rotate(180, glm::vec3(0.0, 1.0, 0.0));
@@ -142,6 +142,7 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 		currentCamera->ProcessKeyboard(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
 		ourModel->Translate(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
 		ourModel->shift=glm::vec3(x1,y1,z1);
+		printf("%f,%f,%f\n", ourModel->shift.x, ourModel->shift.y, ourModel->shift.z);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 

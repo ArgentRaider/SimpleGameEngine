@@ -321,6 +321,7 @@ void RenderEngine::setTerrain(const std::string& path, const std::string& height
 	meshes.push_back(terrain);
 	Model* terrainModel = new Model(meshes);
 	addModel(*terrainModel);
+	printf("%f %f", getHeight(0, 0), getHeight(10, 10));
 }
 
 float RenderEngine::getHeight(float x, float z)
