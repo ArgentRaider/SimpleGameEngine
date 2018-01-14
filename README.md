@@ -12,6 +12,7 @@ A simple game engine for Computer Graphics homework, based on [Learn OpenGL](htt
 - [GLAD](http://glad.dav1d.de/)
 - [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h)
 - [Assimp](http://assimp.org/main_downloads.html)
+- [Freetype](https://www.freetype.org/)
 
 All needed .lib and .dll files are already built in the project directory but it is suggested to built them on your own platform. 
 
