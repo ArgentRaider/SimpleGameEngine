@@ -5,11 +5,12 @@
 
 #include "Camera.h"
 #include "Model/Model.h"
+#include "Model/Tank/Tank.h"
 
 class ThirdPersonCamera
 {
 public:
-	Model& person;
+	Tank& person;
 	Camera camera;
 	glm::vec3 center;		// The point this camera is always looking at.
 	float distance;			// How far this camera is from the center.
@@ -19,7 +20,7 @@ public:
 	float Zoom;
 	glm::vec3 Position;
 
-	ThirdPersonCamera(Model& person, float distance = 6.0f, float yaw = 90.0f, float pitch = PITCH)
+	ThirdPersonCamera(Tank& person, float distance = 6.0f, float yaw = 90.0f, float pitch = PITCH)
 		: person(person), distance(distance),
 		camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), yaw, pitch)
 	{
@@ -84,7 +85,7 @@ public:
 		Position = camera.Position;
 	}
 
-	void changeTank(Model *p) {
+	void changeTank(Tank *p) {
 		person = *p;
 		Init();
 	}

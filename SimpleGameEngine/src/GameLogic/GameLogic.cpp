@@ -12,9 +12,9 @@ MainGameLogic::MainGameLogic()
 	ourShader->init();
 
 	// get a model wearing nanosuit!
-	tank1 = new Model("res/models/shen/shen.obj");
+	tank1 = new Tank("res/models/shen/shen.obj");
 	barrel1 = new Model("res/models/barrel/barrel.obj");
-	tank2 = new Model("res/models/shen2/shen2.obj");
+	tank2 = new Tank("res/models/shen2/shen2.obj");
 	barrel2 = new Model("res/models/barrel2/barrel2.obj");
 	tank1->addBarrel(barrel1);
 	tank2->addBarrel(barrel2);

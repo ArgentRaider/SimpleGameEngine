@@ -50,13 +50,7 @@ public:
 	// Maybe useful in collision detection.
 	Collider getCollider() { return this->collider; }
 
-	void addBarrel(Model *bar);
-
-	void adjustBarrelUp();
-
-	void adjustBarrelDown();
-
-	void backout();
+	float rot = 0.0f;
 
 	~Model();
 	
@@ -65,8 +59,6 @@ protected:
 	std::string directory;
 	std::vector<Texture> textures_loaded; // To avoid reloading the same texture for multiple times.
 										  // Actually we only need Texture.path to use here.
-
-	float rot = 0.0;
 
 	Collider collider;
 
@@ -80,7 +72,7 @@ protected:
 	std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
 		std::string typeName);
 
-	Model *barrel = nullptr;
+	
 };
 
 #endif

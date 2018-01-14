@@ -127,6 +127,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Model\Mesh.cpp" />
     <ClCompile Include="src\Model\Model.cpp" />
+    <ClCompile Include="src\Model\Tank\Tank.cpp" />
     <ClCompile Include="src\RenderEngine\RenderEngine.cpp" />
     <ClCompile Include="src\ShaderProgram\Shader.cpp" />
   </ItemGroup>
@@ -137,6 +138,7 @@
     <ClInclude Include="src\GameLogic\GameLogic.h" />
     <ClInclude Include="src\Model\Mesh.h" />
     <ClInclude Include="src\Model\Model.h" />
+    <ClInclude Include="src\Model\Tank\Tank.h" />
     <ClInclude Include="src\RenderEngine\RenderEngine.h" />
     <ClInclude Include="src\ShaderProgram\Shader.h" />
   </ItemGroup>

@@ -7,6 +7,7 @@
 #include <ShaderProgram/Shader.h>
 #include <Model/Model.h>
 #include <Model/Mesh.h>
+#include <Model/Tank/Tank.h>
 #include <Camera/ThirdPersonCamera.h>
 
 // Abstract class GameLogic
@@ -48,10 +49,10 @@ private:
 	//Camera *camera;
 	
 	// Model(s)
-	Model *ourModel;
-	Model *tank1;
+	Tank *ourModel;
+	Tank *tank1;
 	Model *barrel1;
-	Model *tank2;
+	Tank *tank2;
 	Model *barrel2;
 	unsigned int diffuseMap;
 	unsigned int specularMap;

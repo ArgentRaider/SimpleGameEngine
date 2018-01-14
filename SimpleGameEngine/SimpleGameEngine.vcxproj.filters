@@ -39,6 +39,9 @@
     <ClCompile Include="src\RenderEngine\RenderEngine.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\Model\Tank\Tank.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ShaderProgram\Shader.h">
@@ -63,6 +66,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\RenderEngine\RenderEngine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Model\Tank\Tank.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
