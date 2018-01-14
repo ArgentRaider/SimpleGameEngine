@@ -327,15 +327,15 @@ float RenderEngine::getHeight(float x, float z)
 {
 	float leftBorder = -MAP_W*MAP_SCALE / 2;
 	float rightBorder = MAP_W*MAP_SCALE / 2 - MAP_SCALE;
-	if (x<leftBorder || x>rightBorder || z<leftBorder || z>rightBorder)
+	if (x<=leftBorder || x>=rightBorder || z<=leftBorder || z>=rightBorder)
 		return 0.0f;
 	// convert to coordinate in the height map
 	float mapX = (x + MAP_W*MAP_SCALE / 2) / MAP_SCALE;
 	float mapZ = (z + MAP_W*MAP_SCALE / 2) / MAP_SCALE;
 	int col0 = (int)mapX;
-	int col1 = (col0 == MAP_W - 1) ? col0 : (col0 + 1);
+	int col1 = col0 + 1;
 	int row0 = (int)mapZ;
-	int row1 = (row0 == MAP_W - 1) ? row0 : (row0 + 1);
+	int row1 = row0 + 1;
 	float h00 = terrainVertices[row0*MAP_W + col0].Position.y;
 	float h01 = terrainVertices[row0*MAP_W + col1].Position.y;
 	float h10 = terrainVertices[row1*MAP_W + col0].Position.y;
@@ -344,13 +344,35 @@ float RenderEngine::getHeight(float x, float z)
 	float tz = mapZ - row0;
 	// interpolation
 	if (tx + tz < 1)
-	{
 		return (1 - tx - tz)*h00 + tx*h01 + tz*h10;
-	}
 	else
-	{
 		return (tx + tz - 1)*h11 + (1 - tx)*h10 + (1 - tz)*h01;
-	}
+}
+
+glm::vec3 RenderEngine::getNormal(float x, float z)
+{
+	float leftBorder = -MAP_W*MAP_SCALE / 2;
+	float rightBorder = MAP_W*MAP_SCALE / 2 - MAP_SCALE;
+	if (x <= leftBorder || x >= rightBorder || z <= leftBorder || z >= rightBorder)
+		return glm::vec3(0.0f,1.0f,0.0f);
+	// convert to coordinate in the height map
+	float mapX = (x + MAP_W*MAP_SCALE / 2) / MAP_SCALE;
+	float mapZ = (z + MAP_W*MAP_SCALE / 2) / MAP_SCALE;
+	int col0 = (int)mapX;
+	int col1 = col0 + 1;
+	int row0 = (int)mapZ;
+	int row1 = row0 + 1;
+	float tx = mapX - col0;
+	float tz = mapZ - row0;
+	glm::vec3 v0 = terrainVertices[row0*MAP_W + col0].Position;
+	glm::vec3 v1 = terrainVertices[row1*MAP_W + col0].Position;
+	glm::vec3 v2 = terrainVertices[row0*MAP_W + col1].Position;
+	glm::vec3 v3 = terrainVertices[row1*MAP_W + col1].Position;
+
+	if (tx + tz < 1)
+		return glm::normalize(glm::cross(v1 - v0, v2 - v0));
+	else
+		return glm::normalize(glm::cross(v3 - v1, v2 - v1));
 }
 
 void RenderEngine::setCamera(Camera & camera)

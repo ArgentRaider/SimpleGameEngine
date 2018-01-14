@@ -52,6 +52,9 @@ public:
 	// get height
 	static float getHeight(float x, float z);
 
+	// get normal
+	static glm::vec3 getNormal(float x, float z);
+
 	// set camera
 	static void setCamera(Camera& camera);
 
