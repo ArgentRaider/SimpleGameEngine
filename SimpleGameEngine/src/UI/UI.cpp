@@ -15,7 +15,7 @@ int UI::cursorPosMax[50] = { 9,9,9,3,100,100,9,9,0,0,100, 100, 100, 11,11,11,11,
 glm::vec4 UI::highlight(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
 glm::vec4 UI::lowlight(glm::vec4(0.0f, 0.0f, 0.0f, 0.5f));
 glm::vec4 UI::redlight(glm::vec4(1.0f, 0.5f, 0.5f, 0.5f));
-char *UI::titles_main[50] = { "resume game", "edit menu", "import and export", "video and screenshot", "exit game" };
+char *UI::titles_main[50] = { "play game", "edit menu", "import and export", "video and screenshot", "exit game" };
 char *UI::titles_edit[50] = { "edit my tank" , "edit light" };
 
 /*
@@ -170,9 +170,9 @@ void UI::drawEditTank()
 {
 	int myID = 2;
 	char titles0[50], titles1[50], titles2[50];
-	sprintf_s(titles0, 50, "edit material   %d", cursorPos[0]);
-	sprintf_s(titles1, 50, "edit texture    %d", cursorPos[1]);
-	sprintf_s(titles2, 50, "edit size       %d", cursorPos[2]);
+	sprintf_s(titles0, 50, "edit material (not implemented)   %d", cursorPos[0]);
+	sprintf_s(titles1, 50, "edit texture (not implemented)    %d", cursorPos[1]);
+	sprintf_s(titles2, 50, "edit size (not implemented)       %d", cursorPos[2]);
 	char *titles[50] = { titles0, titles1, titles2 };
 	drawMenuTool(myID, entryPosMax[myID], titles);
 }
@@ -227,15 +227,15 @@ void UI::drawimportMenu()
 {
 	int myID = 4;
 	char titles0[50];
-	sprintf_s(titles0, 50, "import new 3D mesh   %d", cursorPos[6]);
-	char *titles[50] = { titles0, "export current mesh" };
+	sprintf_s(titles0, 50, "import new 3D mesh (not implemented)   %d", cursorPos[6]);
+	char *titles[50] = { titles0, "export current mesh (not implemented)" };
 	drawMenuTool(myID, entryPosMax[myID], titles);
 }
 void UI::drawVideoMenu() 
 {
 	int myID = 5;
 	char titles0[50];
-	sprintf_s(titles0, 50, "play video     %d", cursorPos[7]);
+	sprintf_s(titles0, 50, "play video (not implemented)     %d", cursorPos[7]);
 	char *titles[50] = { titles0, "capture a screenshot" };
 	drawMenuTool(myID, entryPosMax[myID], titles);
 }

@@ -68,7 +68,7 @@ private:
 	// some settings
 	bool disableCursor = false;
 	bool firstMouse = true;
-	bool disableMenu = true;
+	bool disableMenu = false;
 
 	void changeTank();
 };
