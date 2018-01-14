@@ -36,6 +36,9 @@ public:
 	void setVec3(const std::string &name, glm::vec3 vector)const;
 	void setVec3(const std::string &name, float* value_ptr)const;
 	void setVec3(const std::string &name, float x, float y, float z)const;
+	void setVec4(const std::string &name, glm::vec4 vector)const;
+	void setVec4(const std::string &name, float* value_ptr)const;
+	void setVec4(const std::string &name, float x, float y, float z, float w)const;
 	const GLchar *vertexPath, *fragmentPath;
 };
 
@@ -72,6 +75,16 @@ public:
 class SkyboxShader : public Shader {
 public:
 	SkyboxShader():Shader("src/shaders/skyboxShader.vertex", "src/shaders/skyboxShader.frag"){}
+};
+
+class CharacterShader : public Shader {
+public:
+	CharacterShader() :Shader("src/shaders/characterVertexShader.vertex", "src/shaders/characterFragmentShader.frag") {}
+};
+
+class TwoDShader : public Shader {
+public:
+	TwoDShader() :Shader("src/shaders/2DVertexShader.vertex", "src/shaders/2DFragmentShader.frag") {}
 };
 
 #endif

@@ -31,6 +31,8 @@ public:
 	// Provided shaders
 	static SkyboxShader skyboxShader;
 	static LightShader defaultShader;
+	static CharacterShader characterShader;
+	static TwoDShader twoDShader;
 
 	static GLFWwindow* getWindow();
 	static float getDeltaTime();

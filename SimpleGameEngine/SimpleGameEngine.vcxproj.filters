@@ -31,6 +31,9 @@
     <ClCompile Include="src\Model\Tank\Tank.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\UI\UI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BasicComp\BasicComp.h">
@@ -61,6 +64,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\Camera\ThirdPersonCamera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UI\UI.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

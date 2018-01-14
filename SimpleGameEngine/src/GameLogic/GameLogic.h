@@ -9,6 +9,7 @@
 #include <Model/Mesh.h>
 #include <Model/Tank/Tank.h>
 #include <Camera/ThirdPersonCamera.h>
+#include <UI/UI.h>
 
 // Abstract class GameLogic
 // You may create your own game logic by overriding the virtual functions and add some COOL things!
@@ -40,6 +41,7 @@ public:
 	void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 	void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 	void DrawFrame(void);
+	void closeMenu();
 private:
 	// Shader(s)
 	LightShader *ourShader;
@@ -66,6 +68,7 @@ private:
 	// some settings
 	bool disableCursor = false;
 	bool firstMouse = true;
+	bool disableMenu = true;
 
 	void changeTank();
 };

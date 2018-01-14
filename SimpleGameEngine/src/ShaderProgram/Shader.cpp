@@ -129,6 +129,21 @@ void Shader::setVec3(const std::string & name, float x, float y, float z) const
 	glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
 }
 
+void Shader::setVec4(const std::string & name, glm::vec4 vector) const
+{
+	glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(vector));
+}
+
+void Shader::setVec4(const std::string &name, float* value_ptr)const
+{
+	glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, value_ptr);
+}
+
+void Shader::setVec4(const std::string & name, float x, float y, float z, float w) const
+{
+	glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
+}
+
 void LightShader::setDirLight(int index, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
 {
 	use();

@@ -72,6 +72,9 @@ MainGameLogic::MainGameLogic()
 	float constant = 1.0f, linear = 0.09f, quadratic = 0.032f;
 	RenderEngine::addDirLight(lightDir, defaultAmbient, defaultDiffuse, defaultSpecular);
 
+	// UI init
+	UI::init();
+
 	//for (glm::vec3 position : pointLightPositions) {
 	//	RenderEngine::addPointLight(position, defaultAmbient, defaultDiffuse, defaultSpecular, constant, linear, quadratic);
 	//}
@@ -120,70 +123,123 @@ MainGameLogic::~MainGameLogic()
 
 void MainGameLogic::DrawFrame(void)
 {
+	UI::drawBlood();
+
+	// ...
+
+	UI::screenshot();
+	if (!disableMenu)
+		UI::drawMenu();
 }
 
 void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 {
-	static bool pressB = false;
+	static bool pressB = false, pressESC = false, pressW = false,
+		pressS = false, pressA = false, pressD = false, pressEnter = false;
 
-	// Exit
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
+	// process ESC
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+		pressESC = true;
+	}
+	else if (pressESC && glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE) {
+		pressESC = false;
+		// press ESC in menu UI
+		if (!disableMenu)
+			UI::pressEsc(this);
+		// show menu UI
+		else
+			disableMenu = !disableMenu;
+	}
 
-	// Move the camera
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		
-		float x0 = ourModel->shift.x;
-		float y0 = ourModel->shift.y;
-		float z0 = ourModel->shift.z;
-		float x1 = ourModel->shift.x - ourModel->Front.x * 6.0f * deltaTime;
-		float z1 = ourModel->shift.z + ourModel->Front.z * 6.0f * deltaTime;
-		float y1 = RenderEngine::getHeight(x1, z1);
-		currentCamera->ProcessKeyboard(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
-		ourModel->Translate(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
-		ourModel->shift=glm::vec3(x1,y1,z1);
-		printf("%f,%f,%f\n", ourModel->shift.x, ourModel->shift.y, ourModel->shift.z);
-	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-
-		float x0 = ourModel->shift.x;
-		float y0 = ourModel->shift.y;
-		float z0 = ourModel->shift.z;
-		float x1 = ourModel->shift.x + ourModel->Front.x * 6.0f * deltaTime;
-		float z1 = ourModel->shift.z - ourModel->Front.z * 6.0f * deltaTime;
-		float y1 = RenderEngine::getHeight(x1, z1);
-		currentCamera->ProcessKeyboard(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
-		ourModel->Translate(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
-		ourModel->shift = glm::vec3(x1, y1, z1);
-	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		ourModel->Rotate(rotateDelt, glm::vec3(0, 1.0f, 0));
-		ourModel->backout();
-	}
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		ourModel->Rotate(-rotateDelt, glm::vec3(0, 1.0f, 0));
-		ourModel->backout();
-	}
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		ourModel->adjustBarrelUp();
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-		ourModel->adjustBarrelDown();
-
-	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-		changeTank();
-
-	if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
-		pressB = true;
-	}
-	else if (pressB && glfwGetKey(window, GLFW_KEY_B) == GLFW_RELEASE) {
-		pressB = false;
-		disableCursor = !disableCursor;
-		if (disableCursor) {
-			firstMouse = true;
-			RenderEngine::disableCursor();		// Disable the cursor for an FPS camera
+	// process WSAD
+	if (!disableMenu) {
+		// Move the cursor
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+			pressW = true;
+		else if (pressW && glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
+			pressW = false;
+			UI::subEntry();
 		}
-		else {
-			RenderEngine::enableCursor();
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+			pressS = true;
+		else if (pressS && glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE) {
+			pressS = false;
+			UI::addEntry();
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+			pressA = true;
+		else if (pressA && glfwGetKey(window, GLFW_KEY_A) == GLFW_RELEASE) {
+			pressA = false;
+			UI::subCursor();
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+			pressD = true;
+		else if (pressD && glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE) {
+			pressD = false;
+			UI::addCursor();
+		}
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
+			pressEnter = true;
+		else if (pressEnter && glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE) {
+			pressEnter = false;
+			UI::pressEnter(this);
+		}
+	}
+	else{
+		// Move the camera
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			
+			float x0 = ourModel->shift.x;
+			float y0 = ourModel->shift.y;
+			float z0 = ourModel->shift.z;
+			float x1 = ourModel->shift.x - ourModel->Front.x * 6.0f * deltaTime;
+			float z1 = ourModel->shift.z + ourModel->Front.z * 6.0f * deltaTime;
+			float y1 = RenderEngine::getHeight(x1, z1);
+			currentCamera->ProcessKeyboard(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
+			ourModel->Translate(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
+			ourModel->shift=glm::vec3(x1,y1,z1);
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+
+			float x0 = ourModel->shift.x;
+			float y0 = ourModel->shift.y;
+			float z0 = ourModel->shift.z;
+			float x1 = ourModel->shift.x + ourModel->Front.x * 6.0f * deltaTime;
+			float z1 = ourModel->shift.z - ourModel->Front.z * 6.0f * deltaTime;
+			float y1 = RenderEngine::getHeight(x1, z1);
+			currentCamera->ProcessKeyboard(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
+			ourModel->Translate(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
+			ourModel->shift = glm::vec3(x1, y1, z1);
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			ourModel->Rotate(rotateDelt, glm::vec3(0, 1.0f, 0));
+			ourModel->backout();
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+			ourModel->Rotate(-rotateDelt, glm::vec3(0, 1.0f, 0));
+			ourModel->backout();
+		}
+		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+			ourModel->adjustBarrelUp();
+		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+			ourModel->adjustBarrelDown();
+
+		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+			changeTank();
+
+		if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
+			pressB = true;
+		}
+		else if (pressB && glfwGetKey(window, GLFW_KEY_B) == GLFW_RELEASE) {
+			pressB = false;
+			disableCursor = !disableCursor;
+			if (disableCursor) {
+				firstMouse = true;
+				RenderEngine::disableCursor();		// Disable the cursor for an FPS camera
+			}
+			else {
+				RenderEngine::enableCursor();
+			}
 		}
 	}
 }
@@ -230,4 +286,7 @@ void MainGameLogic::changeTank() {
 
 }
 
-
+void MainGameLogic::closeMenu()
+{
+	disableMenu = !disableMenu;
+}
