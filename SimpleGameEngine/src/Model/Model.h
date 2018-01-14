@@ -53,6 +53,8 @@ public:
 
 	float rot = 0.0f;
 
+	void setShift(float x, float y, float z) { this->shift = glm::vec3(x,y,z); }
+
 	~Model();
 
 	
