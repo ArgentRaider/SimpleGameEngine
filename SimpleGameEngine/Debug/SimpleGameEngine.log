@@ -1,11 +1,22 @@
-﻿  main.cpp
+﻿  GameLogic.cpp
 c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(36): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
 c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(37): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
 c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(38): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
 c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(56): warning C4390: “;”: 找到空的受控语句；这是否是有意的?
+c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\gamelogic\gamelogic.cpp(187): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
   正在生成代码...
-  正在跳过...(未检测到相关更改)
+  正在编译...
+  main.cpp
+c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(36): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(37): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(38): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(56): warning C4390: “;”: 找到空的受控语句；这是否是有意的?
   RenderEngine.cpp
-  GameLogic.cpp
+c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(36): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(37): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(38): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\camera\thirdpersoncamera.h(56): warning C4390: “;”: 找到空的受控语句；这是否是有意的?
+c:\users\kg\documents\visual studio 2015\projects\computergraphics\simplegameengine\simplegameengine\src\renderengine\renderengine.cpp(72): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+  正在生成代码...
   SimpleGameEngine.vcxproj -> C:\Users\KG\Documents\Visual Studio 2015\Projects\ComputerGraphics\SimpleGameEngine\Debug\SimpleGameEngine.exe
   SimpleGameEngine.vcxproj -> C:\Users\KG\Documents\Visual Studio 2015\Projects\ComputerGraphics\SimpleGameEngine\Debug\SimpleGameEngine.pdb (Partial PDB)
