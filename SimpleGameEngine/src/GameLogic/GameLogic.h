@@ -45,7 +45,9 @@ private:
 	LightShader *ourShader;
 
 	// Camera(s)
-	ThirdPersonCamera *camera;
+	ThirdPersonCamera *currentCamera;
+	ThirdPersonCamera *camera1;
+	ThirdPersonCamera *camera2;
 	//Camera *camera;
 	
 	// Model(s)

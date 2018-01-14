@@ -29,6 +29,9 @@ MainGameLogic::MainGameLogic()
 	tank2->Translate(glm::vec3(50.0f, deltay2, 50.0f));
 	tank2->Scale(glm::vec3(0.2f, 0.2f, 0.2f));
 
+	tank1->Rotate(180, glm::vec3(0.0, 1.0, 0.0));
+	tank2->Rotate(180, glm::vec3(0.0, 1.0, 0.0));
+
 	// add it to display
 	RenderEngine::addModel(*tank1);
 	RenderEngine::addModel(*barrel1);
@@ -36,14 +39,17 @@ MainGameLogic::MainGameLogic()
 	RenderEngine::addModel(*barrel2);
 
 	// add a third-person camera following our nanosuit model!
-	camera = new ThirdPersonCamera(*ourModel);
+	camera1 = new ThirdPersonCamera(*tank1);
+	camera2 = new ThirdPersonCamera(*tank2);
+
+	currentCamera = camera1;
 	//camera = new Camera();
-	RenderEngine::setCamera(camera->camera);
+	RenderEngine::setCamera(currentCamera->camera);
 
 	// set a soft background color
 	RenderEngine::setBackGround(0.2f, 0.3f, 0.3f);
 	RenderEngine::setSkyBox("res/textures/skybox");
-	RenderEngine::setTerrain("res/textures/", "terrain.bmp", "land.bmp");
+	//RenderEngine::setTerrain("res/textures/", "terrain.bmp", "land.bmp");
 
 	// Set light in Fragment Shader
 	glm::vec3 lightDir(0.8f, 0.6f, 1.0f);
@@ -64,7 +70,7 @@ MainGameLogic::MainGameLogic()
 	}
 	
 	// Draw a rectangle using self-defined data
-	/*
+	
 	Vertex topRight(glm::vec3(50.0f, 0.0f, 50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f)),
 		bottomRight(glm::vec3(50.0f, 0.0f, -50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
 		topLeft(glm::vec3(-50.0f, 0.0f, 50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f)),
@@ -86,7 +92,7 @@ MainGameLogic::MainGameLogic()
 	meshes.push_back(*rectangle);
 	recModel = new Model(meshes);
 	RenderEngine::addModel(*recModel);
-	*/
+	
 }
 
 MainGameLogic::~MainGameLogic()
@@ -94,7 +100,8 @@ MainGameLogic::~MainGameLogic()
 	free(recModel);
 	free(rectangle);
 	free(ourModel);
-	free(camera);
+	free(camera1);
+	free(camera2);
 	free(ourShader);
 }
 
@@ -112,14 +119,14 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 
 	// Move the camera
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		camera->ProcessKeyboard(Camera::FORWARD, deltaTime);
+		currentCamera->ProcessKeyboard(Camera::FORWARD, deltaTime);
 		glm::vec3 shift;
 		shift = glm::normalize(glm::vec3(-ourModel->Front.x, 0.0f, ourModel->Front.z)) * 6.0f * deltaTime;
 		ourModel->Translate(shift);
 		ourModel->shift += shift;
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		camera->ProcessKeyboard(Camera::BACKWARD, deltaTime);
+		currentCamera->ProcessKeyboard(Camera::BACKWARD, deltaTime);
 		glm::vec3 shift;
 		shift = -glm::normalize(glm::vec3(-ourModel->Front.x, 0.0f, ourModel->Front.z)) * 6.0f * deltaTime;
 		ourModel->Translate(shift);
@@ -171,13 +178,13 @@ void MainGameLogic::MouseCallback(GLFWwindow* window, double xPos, double yPos)
 		lastX = (float)xPos;
 		lastY = (float)yPos;
 
-		camera->ProcessMouseMovement(xoffset, yoffset);
+		currentCamera->ProcessMouseMovement(xoffset, yoffset);
 	}
 }
 
 void MainGameLogic::ScrollCallback(GLFWwindow * window, double xoffset, double yoffset)
 {
-	camera->ProcessMouseScroll(yoffset);
+	currentCamera->ProcessMouseScroll(yoffset);
 }
 
 void MainGameLogic::changeTank() {
@@ -185,14 +192,16 @@ void MainGameLogic::changeTank() {
 		Sleep(100);
 		ourModel = tank2;
 		printf("Tank1\n");
-		camera->changeTank(ourModel);
+		currentCamera = camera2;
+		RenderEngine::setCamera(currentCamera->camera);
 	}
 	else if(ourModel == tank2)
 	{
 		Sleep(100);
 		ourModel = tank1;
 		printf("Tank2\n");
-		camera->changeTank(ourModel);
+		currentCamera = camera1;
+		RenderEngine::setCamera(currentCamera->camera);
 	}
 
 }
