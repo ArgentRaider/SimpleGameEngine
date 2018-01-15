@@ -8,34 +8,21 @@ std::map<GLchar, Character> UI::Characters;
 GLuint UI::UI_VAO, UI::UI_VBO;
 
 int UI::entryPos[50];
-int UI::entryPosMax[50] = {5,2,3,20,2,2};
+int UI::entryPosMax[50] = {4,20};
 int UI::entryID = 0;
 int UI::cursorPos[50] = { 0,0,0,0,0,0,0,0,0,0,50,5, 50, 8, 6, 10, 10, 10, 10, 5, 5, 5, 10, 10, 10, 10, 9, 32 };
 int UI::cursorPosMax[50] = { 9,9,9,3,100,100,9,9,0,0,100, 100, 100, 11,11,11,11,11,11,11,11,11,11,11,11,100,100,1000 };
-glm::vec4 UI::highlight(glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
-glm::vec4 UI::lowlight(glm::vec4(0.0f, 0.0f, 0.0f, 0.5f));
+glm::vec4 UI::lowlight(glm::vec4(1.0f, 1.0f, 1.0f, 0.2f));
+glm::vec4 UI::highlight(glm::vec4(0.0f, 0.0f, 0.0f, 0.5f));
 glm::vec4 UI::redlight(glm::vec4(1.0f, 0.5f, 0.5f, 0.5f));
-char *UI::titles_main[50] = { "play game", "edit menu", "import and export", "video and screenshot", "exit game" };
-char *UI::titles_edit[50] = { "edit my tank" , "edit light" };
+char *UI::titles_main[50] = { "play game", "edit light", "screenshot", "exit game" };
 
 /*
-All menu content:
 	Main menu						(entryID=0
 	0.	Resume game
-	1.	Edit menu					(entryID=1
-		a)	edit my tank			(entryID=2
-			i.	edit material		(cursorID=0
-			ii.	edit texture		(cursorID=1
-			iii.	edit size		(cursorID=2
-		b)	edit light				(entryID=3
-			...
-	2.	import/export menu			(entryID=4
-		a)	import new 3D mesh		(cursorID=6
-		b)	export current mesh
-	3.	video and screenshot		(entryID=5
-		a)	play video				(cursorID=7
-		b)	capture a screenshot
-	4.	Exit game
+	1.	Edit light					(entryID=1
+	2.	screenshot
+	3.	Exit game
 */
 
 void UI::pressEnter(MainGameLogic* mainGame)
@@ -47,62 +34,15 @@ void UI::pressEnter(MainGameLogic* mainGame)
 			mainGame->closeMenu();
 			mainGame->startGame();
 			break;
-		case 1:	// edit my tank
+		case 1:	// edit light
 			entryID = 1;
 			entryPos[entryID] = 0;
 			break;
-		case 2: // import and export menu
-			entryID = 4;
-			entryPos[entryID] = 0;
-			break;
-		case 3: // video and screenshot
-			entryID = 5;
-			entryPos[entryID] = 0;
-			break;
-		case 4: // exit game
-			glfwSetWindowShouldClose(RenderEngine::getWindow(), true); break;
-		}
-	}
-
-	// entryID == 1 : edit menu
-	else if (entryID == 1) {
-		switch (entryPos[entryID]) {
-		case 0: // edit my tank
-			entryID = 2;
-			entryPos[entryID] = 0;
-			break;
-		case 1: // edit light 
-			entryID = 3;
-			entryPos[entryID] = 0;
-			break;
-		}
-	}
-
-	// entryID == 4 : video and screenshot
-	else if (entryID == 4) {
-		switch (entryPos[entryID]) {
-		case 0:
-				// TO DO:
-				// import new 3D mesh (mesh index = cursorPos[6])
-			break;
-		case 1:
-				// TO DO:
-				// export current mesh
-			break;
-		}
-	}
-
-	// entryID == 5 : video and screenshot
-	else if (entryID == 5) {
-		switch (entryPos[entryID]) {
-		case 0:
-				// TO DO:
-				// play video (video index = cursorPos[7])
-			break;
-		case 1:
-				// TO DO:
-				// capture a screenshot
+		case 2: // scrennshot
 			shotflag = true;
+			break;
+		case 3: // exit game
+			glfwSetWindowShouldClose(RenderEngine::getWindow(), true); 
 			break;
 		}
 	}
@@ -115,18 +55,6 @@ void UI::pressEsc(MainGameLogic* mainGame)
 		mainGame->startGame();
 	}
 	else if (entryID == 1) {
-		entryID = 0;
-	}
-	else if (entryID == 2) {
-		entryID = 1;
-	}
-	else if (entryID == 3) {
-		entryID = 1;
-	}
-	else if (entryID == 4) {
-		entryID = 0;
-	}
-	else if (entryID == 5) {
 		entryID = 0;
 	}
 }
@@ -148,11 +76,7 @@ void UI::drawMenu()
 
 	switch (entryID) {
 	case 0: drawMainMenu(); break;
-	case 1: drawEditMenu(); break;
-	case 2: drawEditTank(); break;
-	case 3: drawEditLight(); break;
-	case 4: drawimportMenu(); break;
-	case 5: drawVideoMenu(); break;
+	case 1: drawEditLight(); break;
 	}
 }
 
@@ -162,26 +86,9 @@ void UI::drawMainMenu()
 	drawMenuTool(myID, entryPosMax[myID], titles_main);
 }
 
-void UI::drawEditMenu()
+void UI::drawEditLight()
 {
 	int myID = 1;
-	drawMenuTool(myID, entryPosMax[myID], titles_edit);
-}
-
-void UI::drawEditTank()
-{
-	int myID = 2;
-	char titles0[50], titles1[50], titles2[50];
-	sprintf_s(titles0, 50, "edit material (not implemented)   %d", cursorPos[0]);
-	sprintf_s(titles1, 50, "edit texture (not implemented)    %d", cursorPos[1]);
-	sprintf_s(titles2, 50, "edit size (not implemented)       %d", cursorPos[2]);
-	char *titles[50] = { titles0, titles1, titles2 };
-	drawMenuTool(myID, entryPosMax[myID], titles);
-}
-
-void UI::drawEditLight() 
-{
-	int myID = 3;
 	switch (cursorPos[3]) {
 	case 0: cursorPosMax[4] = RenderEngine::defaultShader.dirNum; break;
 	case 1: cursorPosMax[4] = RenderEngine::defaultShader.pointNum; break;
@@ -191,29 +98,29 @@ void UI::drawEditLight()
 	char titles0[50]; sprintf_s(titles0, 50, "light type        %s", lightType[cursorPos[3]]);
 	char titles1[50]; sprintf_s(titles1, 50, "light index       %d", cursorPos[4]);
 	char titles2[50]; sprintf_s(titles2, 50, "postion x         %d", cursorPos[10]);
-	char titles3[50]; sprintf_s(titles3, 50, "postion y		   %d", cursorPos[11]);
+	char titles3[50]; sprintf_s(titles3, 50, "postion y         %d", cursorPos[11]);
 	char titles4[50]; sprintf_s(titles4, 50, "postion z         %d", cursorPos[12]);
 	char titles5[50]; sprintf_s(titles5, 50, "direction x       %d/10", cursorPos[13]);
 	char titles6[50]; sprintf_s(titles6, 50, "direction y       %d/10", cursorPos[14]);
 	char titles7[50]; sprintf_s(titles7, 50, "direction z       %d/10", cursorPos[15]);
-	char titles8[50]; sprintf_s(titles8, 50, "ambient  x        %d/10", cursorPos[16]);
-	char titles9[50]; sprintf_s(titles9, 50, "ambient  y        %d/10", cursorPos[17]);
-	char titles10[50]; sprintf_s(titles10, 50, "ambient  z        %d/10", cursorPos[18]);
-	char titles11[50]; sprintf_s(titles11, 50, "diffuse  x        %d/10", cursorPos[19]);
-	char titles12[50]; sprintf_s(titles12, 50, "diffuse  y        %d/10", cursorPos[20]);
-	char titles13[50]; sprintf_s(titles13, 50, "diffuse  z        %d/10", cursorPos[21]);
+	char titles8[50]; sprintf_s(titles8, 50, "ambient  x       %d/10", cursorPos[16]);
+	char titles9[50]; sprintf_s(titles9, 50, "ambient  y       %d/10", cursorPos[17]);
+	char titles10[50]; sprintf_s(titles10, 50, "ambient  z       %d/10", cursorPos[18]);
+	char titles11[50]; sprintf_s(titles11, 50, "diffuse  x          %d/10", cursorPos[19]);
+	char titles12[50]; sprintf_s(titles12, 50, "diffuse  y          %d/10", cursorPos[20]);
+	char titles13[50]; sprintf_s(titles13, 50, "diffuse  z          %d/10", cursorPos[21]);
 	char titles14[50]; sprintf_s(titles14, 50, "specular  x       %d/10", cursorPos[22]);
 	char titles15[50]; sprintf_s(titles15, 50, "specular  y       %d/10", cursorPos[23]);
 	char titles16[50]; sprintf_s(titles16, 50, "specular  z       %d/10", cursorPos[24]);
 	char titles17[50]; sprintf_s(titles17, 50, "constant          %d/10", cursorPos[25]);
-	char titles18[50]; sprintf_s(titles18, 50, "linear            %d/100", cursorPos[26]);
+	char titles18[50]; sprintf_s(titles18, 50, "linear               %d/100", cursorPos[26]);
 	char titles19[50]; sprintf_s(titles19, 50, "quadratic         %d/1000", cursorPos[27]);
 
 	char *titles[50] = { titles0 ,titles1,titles2,titles3,titles4,titles5,titles6,titles7,titles8,titles9, 
 		titles10,titles11,titles12,titles13,titles14,titles15,titles16,titles17,titles18,titles19 };
 	
-	//drawMenuTool(myID, entryPosMax[myID], titles);
-
+	drawMenuTool(myID, entryPosMax[myID], titles);
+	/*
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(RenderEngine::SCR_WIDTH), static_cast<GLfloat>(RenderEngine::SCR_HEIGHT), 0.0f);
 	RenderEngine::characterShader.use();
 	RenderEngine::characterShader.setMat4("projection", projection);
@@ -224,22 +131,7 @@ void UI::drawEditLight()
 	int i = entryPos[myID];
 	drawRecP(RenderEngine::SCR_WIDTH / 2, RenderEngine::SCR_HEIGHT / (entryPosMax[myID] + 1) * (entryPosMax[myID] - i), RenderEngine::SCR_WIDTH / 2,
 			RenderEngine::SCR_HEIGHT / (entryPosMax[myID] + 1), redlight);
-}
-void UI::drawimportMenu() 
-{
-	int myID = 4;
-	char titles0[50];
-	sprintf_s(titles0, 50, "import new 3D mesh (not implemented)   %d", cursorPos[6]);
-	char *titles[50] = { titles0, "export current mesh (not implemented)" };
-	drawMenuTool(myID, entryPosMax[myID], titles);
-}
-void UI::drawVideoMenu() 
-{
-	int myID = 5;
-	char titles0[50];
-	sprintf_s(titles0, 50, "play video (not implemented)     %d", cursorPos[7]);
-	char *titles[50] = { titles0, "capture a screenshot" };
-	drawMenuTool(myID, entryPosMax[myID], titles);
+	*/
 }
 
 void UI::addEntry(int id)
@@ -257,17 +149,7 @@ int UI::getCursor()
 {
 	int cursorID;
 
-	if (entryID == 2 & entryPos[entryID] == 0)
-		cursorID = 0;
-	else if (entryID == 2 & entryPos[entryID] == 1)
-		cursorID = 1;
-	else if (entryID == 2 & entryPos[entryID] == 2)
-		cursorID = 2;
-	else if (entryID == 4 & entryPos[entryID] == 0)
-		cursorID = 6;
-	else if (entryID == 5 & entryPos[entryID] == 0)
-		cursorID = 7;
-	else if (entryID == 3) {
+	if (entryID == 1) {
 		if (entryPos[entryID] <= 1)
 			cursorID = entryPos[entryID] + 3;
 		else
@@ -286,7 +168,7 @@ void UI::addCursor()
 	if (cursorID < 0) return;
 	if (cursorPos[cursorID] + 1 < cursorPosMax[cursorID])
 		cursorPos[cursorID]++;
-	if (entryID == 3)
+	if (entryID == 1)
 		setNewLight();
 }
 
@@ -296,7 +178,7 @@ void UI::subCursor()
 	if (cursorID < 0) return;
 	if (cursorPos[cursorID] - 1 >= 0)
 		cursorPos[cursorID]--;
-	if (entryID == 3)
+	if (entryID == 1)
 		setNewLight();
 }
 

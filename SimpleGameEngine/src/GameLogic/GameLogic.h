@@ -52,6 +52,7 @@ public:
 	//	case 1: tank 1 attacking
 	//	case 2: tank 2 counting
 	//	case 3: tank 2 attacking
+	Tank* getTank(int index);
 private:
 	// Shader(s)
 	LightShader *ourShader;

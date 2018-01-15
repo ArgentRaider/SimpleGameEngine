@@ -66,12 +66,8 @@ private:
 	static glm::vec4 redlight;
 	static void RenderText(Shader &shader, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
 	static void drawMainMenu();
-	static void drawEditMenu();
 	static void drawMenuTool(int myEntryID, int cursorPosMax, char** titles);
-	static void drawEditTank();
 	static void drawEditLight();
-	static void drawimportMenu();
-	static void drawVideoMenu();
 	static int getCursor(); 
 	static void setNewLight();
 

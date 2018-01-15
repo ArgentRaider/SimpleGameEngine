@@ -226,8 +226,9 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 		if (pressSpace && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
 			pressSpace = false;
 			float power = UI::finishCharge();
-			std::cout << "power = " << power << std::endl;
 			chargeFinished = true;
+			std::cout << "power = " << power << std::endl;
+			if (power > 50) attackFinished = true;
 		}
 		// Move the camera
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -314,7 +315,7 @@ void MainGameLogic::changeTank() {
 	if (ourModel == tank1) {
 		Sleep(100);
 		ourModel = tank2;
-		printf("Tank1\n");
+		printf("Tank2\n");
 		currentCamera = camera2;
 		RenderEngine::setCamera(currentCamera->camera);
 	}
@@ -322,7 +323,7 @@ void MainGameLogic::changeTank() {
 	{
 		Sleep(100);
 		ourModel = tank1;
-		printf("Tank2\n");
+		printf("Tank1\n");
 		currentCamera = camera1;
 		RenderEngine::setCamera(currentCamera->camera);
 	}
@@ -339,4 +340,12 @@ void MainGameLogic::startGame()
 	timeStamp = glfwGetTime();
 	turnState = 0;
 	remainingTime = 15.0f;
+}
+
+Tank* MainGameLogic::getTank(int index)
+{
+	if (index == 1)
+		return tank1;
+	else if (index == 2)
+		return tank2;
 }
