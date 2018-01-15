@@ -526,7 +526,29 @@ void UI::RenderText(Shader &shader, std::string text, GLfloat x, GLfloat y, GLfl
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-float UI::blood = 90.0f;
+float UI::blood[2] = { 90.0f, 90.0f };
+
+float UI::getBlood(int player/* player == 1 or 2 */)
+{
+	return blood[player - 1];
+}
+
+void UI::setBlood(int player, float newBlood)
+{
+	blood[player - 1] = newBlood;
+}
+
+void UI::addBlood(int player, float delta)
+{
+	blood[player - 1] += delta;
+	if (blood[player - 1] > 100) blood[player - 1] = 100;
+}
+
+void UI::subBlood(int player, float delta)
+{
+	blood[player - 1] -= delta;
+	if (blood[player - 1] < 0) blood[player - 1] = 0;
+}
 
 void UI::drawBlood()
 {
@@ -534,34 +556,19 @@ void UI::drawBlood()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// blood rec: 100*20
-	float width_1 = blood;
-	float width_2 = 100.0f - blood;
+	// blood rec: 200*30
+	float width_1 = blood[0]*2;
+	float width_2 = 200 - width_1;
+	drawRecP(25 + width_1 / 2, 575, width_1, 30, glm::vec4(1.0f, 0.0f, 0.0f, 0.5f));
+	drawRecP(25 + width_1 + width_2 / 2, 575, width_2, 30, glm::vec4(0.8f, 0.8f, 0.8f, 0.5f));
+	renderText("Tank 1", 25, 40, 0.4f, glm::vec3(1.0f, 1.0f, 1.0f));
 
-	drawRecP(15+width_1/2, 30, width_1, 30, glm::vec4(1.0, 0.0f, 0.0f, 0.5f));
-	drawRecP(15+width_1+width_2/2, 30, width_2, 30, glm::vec4(0.8f, 0.8f, 0.8f, 0.5f));
-}
-
-float UI::getBlood()
-{
-	return blood;
-}
-
-void UI::setBlood(float newBlood)
-{
-	blood = newBlood;
-}
-
-void UI::addBlood(float delta)
-{
-	blood += delta;
-	if (blood > 100) blood = 100;
-}
-
-void UI::subBlood(float delta)
-{
-	blood -= delta;
-	if (blood < 0) blood = 0;
+	// blood rec: 200*30
+	width_1 = blood[1]*2;
+	width_2 = 200 - width_1;
+	drawRecP( 800.0f - (25 + width_1/2), 575, width_1, 30, glm::vec4(1.0f, 0.0f, 0.0f, 0.5f));
+	drawRecP(800.0f - (25 + width_1 + width_2/2), 575, width_2, 30, glm::vec4(0.8f, 0.8f, 0.8f, 0.5f));
+	renderText("Tank 2", 800.0f - 85, 40, 0.4f, glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
 bool UI::shotflag = false;
@@ -626,4 +633,45 @@ void UI::screenshot()
 	fclose(pDummyFile);
 	fclose(pWritingFile);
 	free(pPixelData);
+}
+
+float UI::power = 0;
+
+void UI::charge(float deltaTime)
+{
+	int chargeSpeed = 50;
+	power += deltaTime * chargeSpeed;
+	if (power > 100.0f)
+		power = 100.0f;
+}
+
+float UI::finishCharge(void)
+{
+	float finalPower = power;
+	power = 0;
+	return finalPower;
+}
+
+float UI::getCharge(void)
+{
+	return power;
+}
+
+void UI::setCharge(float value)
+{
+	power = value;
+}
+
+void UI::drawPower()
+{
+	glViewport(0, 0, RenderEngine::SCR_WIDTH, RenderEngine::SCR_HEIGHT);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	// blood rec: 750*30
+	float width_1 = power * 7.5;
+	float width_2 = 750 - width_1;
+
+	drawRecP(25 + width_1 / 2, 25, width_1, 30, glm::vec4(0.25f, 0.4f, 1.0f, 0.5f));
+	drawRecP(25 + width_1 + width_2 / 2, 25, width_2, 30, glm::vec4(0.8f, 0.8f, 0.8f, 0.5f));
 }

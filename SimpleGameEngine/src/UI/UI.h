@@ -27,6 +27,7 @@ class UI
 public:
 	static void init();
 
+	static void screenshot();
 	static void renderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f));
 	static void drawRec(GLfloat center_x, GLfloat center_y, GLfloat width, GLfloat height, glm::vec4 RGBA = glm::vec4(0.0f, 0.0f, 0.0f, 0.5f));
 	static void drawRecP(GLfloat center_x_p, GLfloat center_y_p, GLfloat width_p, GLfloat height_p, glm::vec4 RGBA = glm::vec4(0.0f, 0.0f, 0.0f, 0.5f));
@@ -42,11 +43,17 @@ public:
 
 	// blood : [0, 100]
 	static void drawBlood();
-	static float getBlood();
-	static void setBlood(float newBlood);
-	static void addBlood(float delta);
-	static void subBlood(float delta);
-	static void screenshot();
+	static float getBlood(int player/* player == 1 or 2 */);
+	static void setBlood(int player, float newBlood);
+	static void addBlood(int player, float delta);
+	static void subBlood(int player, float delta);
+
+	// charge
+	static void charge(float deltaTime);
+	static float finishCharge(void);
+	static float getCharge(void);
+	static void setCharge(float value);
+	static void drawPower();
 
 private:
 	static std::map<GLchar, Character> Characters;
@@ -77,7 +84,10 @@ private:
 	static char *titles_edit[50];
 
 	// blood
-	static float blood;
+	static float blood[2];
+
+	// power
+	static float power;
 
 	// screen shot flag
 	static bool shotflag;

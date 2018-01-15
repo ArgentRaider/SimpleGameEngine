@@ -123,7 +123,10 @@ MainGameLogic::~MainGameLogic()
 
 void MainGameLogic::DrawFrame(void)
 {
-	UI::drawBlood();
+	if (disableMenu) {
+		UI::drawBlood();
+		UI::drawPower();
+	}
 
 	// ...
 
@@ -135,9 +138,10 @@ void MainGameLogic::DrawFrame(void)
 void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 {
 	static bool pressB = false, pressESC = false, pressW = false,
-		pressS = false, pressA = false, pressD = false, pressEnter = false;
+		pressS = false, pressA = false, pressD = false, pressEnter = false,
+		pressSpace = false;
 
-	// process ESC
+	// process ESC, switch between game and menu
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		pressESC = true;
 	}
@@ -151,7 +155,7 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 			disableMenu = !disableMenu;
 	}
 
-	// process WSAD
+	// process keys in the menu
 	if (!disableMenu) {
 		// Move the cursor
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -185,7 +189,19 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 			UI::pressEnter(this);
 		}
 	}
+
+	// process keys in the game
 	else{
+		// prepare power of tank
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+			UI::charge(deltaTime);
+			pressSpace = true;
+		}
+		if (pressSpace && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+			pressSpace = false;
+			float power = UI::finishCharge();
+			std::cout << "power = " << power << std::endl;
+		}
 		// Move the camera
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 			
