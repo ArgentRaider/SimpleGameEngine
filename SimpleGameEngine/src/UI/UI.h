@@ -91,6 +91,7 @@ private:
 
 	// power
 	static float power;
+	static bool charge_direction;
 
 	// screen shot flag
 	static bool shotflag;

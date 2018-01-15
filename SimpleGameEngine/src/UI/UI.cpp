@@ -403,7 +403,10 @@ void UI::drawRec(GLfloat x, GLfloat y, GLfloat w, GLfloat h, glm::vec4 RGBA)
 							//glDrawArrays(GL_TRIANGLES, 0, 6);
 							//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 5);
-	glBindVertexArray(0); // no need to unbind it every time 
+	glBindVertexArray(0); // no need to unbind it every time
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 }
 
 void UI::init()
@@ -528,7 +531,7 @@ void UI::RenderText(Shader &shader, std::string text, GLfloat x, GLfloat y, GLfl
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-float UI::blood[2] = { 90.0f, 90.0f };
+float UI::blood[2] = { 100.0f, 100.0f };
 
 float UI::getBlood(int player/* player == 1 or 2 */)
 {
@@ -643,19 +646,28 @@ void UI::screenshot()
 }
 
 float UI::power = 0;
+bool UI::charge_direction = true;
 
 void UI::charge(float deltaTime)
 {
 	int chargeSpeed = 50;
-	power += deltaTime * chargeSpeed;
-	if (power > 100.0f)
-		power = 100.0f;
+	if (charge_direction) {
+		power += deltaTime * chargeSpeed;
+		if (power > 100.0f)
+			charge_direction = false;
+	}
+	else {
+		power -= deltaTime * chargeSpeed;
+		if (power <= 0.0f)
+			charge_direction = true;
+	}
 }
 
 float UI::finishCharge(void)
 {
 	float finalPower = power;
 	power = 0;
+	charge_direction = true;
 	return finalPower;
 }
 

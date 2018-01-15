@@ -129,9 +129,8 @@ void MainGameLogic::DrawFrame(void)
 		UI::drawPower();
 		UI::drawCountDown(this);
 
-		remainingTime = 15.0f - (glfwGetTime() - timeStamp);
-		std::cout << turnState <<"   ,  " << std::endl;
 		if (turnState == 0 || turnState == 2) {
+			remainingTime = 15.0f - (glfwGetTime() - timeStamp);
 			if (remainingTime <= 0.0f) {
 				changeTank();
 				timeStamp = glfwGetTime();
@@ -221,13 +220,14 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 		// prepare power of tank
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
 			UI::charge(deltaTime);
+			timeStamp += deltaTime;
 			pressSpace = true;
 		}
 		if (pressSpace && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
 			pressSpace = false;
 			float power = UI::finishCharge();
 			std::cout << "power = " << power << std::endl;
-			//chargeFinished = true;
+			chargeFinished = true;
 		}
 		// Move the camera
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
