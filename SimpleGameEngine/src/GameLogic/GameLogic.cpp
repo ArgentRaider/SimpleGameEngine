@@ -228,7 +228,6 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 			float power = UI::finishCharge();
 			chargeFinished = true;
 			std::cout << "power = " << power << std::endl;
-			if (power > 50) attackFinished = true;
 		}
 		// Move the camera
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -340,12 +339,4 @@ void MainGameLogic::startGame()
 	timeStamp = glfwGetTime();
 	turnState = 0;
 	remainingTime = 15.0f;
-}
-
-Tank* MainGameLogic::getTank(int index)
-{
-	if (index == 1)
-		return tank1;
-	else if (index == 2)
-		return tank2;
 }
