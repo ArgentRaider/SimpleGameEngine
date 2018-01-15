@@ -128,30 +128,31 @@ void MainGameLogic::DrawFrame(void)
 		UI::drawBlood(turnState);
 		UI::drawPower();
 		UI::drawCountDown(this);
-	}
 
-	remainingTime = 15.0f - (glfwGetTime() - timeStamp);
-	if (turnState == 0 || turnState == 2) {
-		if (remainingTime <= 0.0f) {
-			changeTank();
-			timeStamp = glfwGetTime();
-			remainingTime = 15.0f;
-			if (ourModel == tank1) turnState = 0;
-			else if (ourModel == tank2) turnState = 2;
+		remainingTime = 15.0f - (glfwGetTime() - timeStamp);
+		std::cout << turnState <<"   ,  " << std::endl;
+		if (turnState == 0 || turnState == 2) {
+			if (remainingTime <= 0.0f) {
+				changeTank();
+				timeStamp = glfwGetTime();
+				remainingTime = 15.0f;
+				if (ourModel == tank1) turnState = 0;
+				else if (ourModel == tank2) turnState = 2;
+			}
+			else if (chargeFinished) {
+				chargeFinished = false;
+				turnState += 1;
+			}
 		}
-		else if (chargeFinished) {
-			chargeFinished = false;
-			turnState += 1;
-		}
-	}
-	else if (turnState == 1 || turnState == 3) {
-		if (attackFinished) {
-			attackFinished = false;
-			changeTank();
-			timeStamp = glfwGetTime();
-			remainingTime = 15.0f;
-			if (ourModel == tank1) turnState = 0;
-			else if (ourModel == tank2) turnState = 2;
+		else if (turnState == 1 || turnState == 3) {
+			if (attackFinished) {
+				attackFinished = false;
+				changeTank();
+				timeStamp = glfwGetTime();
+				remainingTime = 15.0f;
+				if (ourModel == tank1) turnState = 0;
+				else if (ourModel == tank2) turnState = 2;
+			}
 		}
 	}
 
@@ -226,7 +227,7 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 			pressSpace = false;
 			float power = UI::finishCharge();
 			std::cout << "power = " << power << std::endl;
-			chargeFinished = true;
+			//chargeFinished = true;
 		}
 		// Move the camera
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
