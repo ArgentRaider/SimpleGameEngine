@@ -42,6 +42,16 @@ public:
 	void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 	void DrawFrame(void);
 	void closeMenu();
+	void startGame();
+
+	float timeStamp;
+	float remainingTime;
+	int turnState = 0;
+	// turnState: 
+	//	case 0: tank 1 counting
+	//	case 1: tank 1 attacking
+	//	case 2: tank 2 counting
+	//	case 3: tank 2 attacking
 private:
 	// Shader(s)
 	LightShader *ourShader;
@@ -69,6 +79,8 @@ private:
 	bool disableCursor = false;
 	bool firstMouse = true;
 	bool disableMenu = false;
+	bool chargeFinished = false;
+	bool attackFinished = false;
 
 	void changeTank();
 };

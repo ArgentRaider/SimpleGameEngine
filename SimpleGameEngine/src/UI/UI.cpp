@@ -45,6 +45,7 @@ void UI::pressEnter(MainGameLogic* mainGame)
 		switch (entryPos[entryID]) {
 		case 0: // resume game
 			mainGame->closeMenu();
+			mainGame->startGame();
 			break;
 		case 1:	// edit my tank
 			entryID = 1;
@@ -111,6 +112,7 @@ void UI::pressEsc(MainGameLogic* mainGame)
 {
 	if (entryID == 0) {
 		mainGame->closeMenu();
+		mainGame->startGame();
 	}
 	else if (entryID == 1) {
 		entryID = 0;
@@ -550,25 +552,30 @@ void UI::subBlood(int player, float delta)
 	if (blood[player - 1] < 0) blood[player - 1] = 0;
 }
 
-void UI::drawBlood()
+void UI::drawBlood(int turnState)
 {
 	glViewport(0, 0, RenderEngine::SCR_WIDTH, RenderEngine::SCR_HEIGHT);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glm::vec4 red = glm::vec4(1.0f, 0.0f, 0.0f, 0.5f);
+	glm::vec4 white = glm::vec4(1.0f, 1.0f, 1.0f, 0.5f);
+	glm::vec4 tank1color = (turnState == 0 | turnState == 1) ? red : white;
+	glm::vec4 tank2color = (turnState == 2 | turnState == 3) ? red : white;
 
 	// blood rec: 200*30
 	float width_1 = blood[0]*2;
 	float width_2 = 200 - width_1;
 	drawRecP(25 + width_1 / 2, 575, width_1, 30, glm::vec4(1.0f, 0.0f, 0.0f, 0.5f));
 	drawRecP(25 + width_1 + width_2 / 2, 575, width_2, 30, glm::vec4(0.8f, 0.8f, 0.8f, 0.5f));
-	renderText("Tank 1", 25, 40, 0.4f, glm::vec3(1.0f, 1.0f, 1.0f));
+	renderText("Tank 1", 25, 40, 0.4f, tank1color);
 
 	// blood rec: 200*30
 	width_1 = blood[1]*2;
 	width_2 = 200 - width_1;
 	drawRecP( 800.0f - (25 + width_1/2), 575, width_1, 30, glm::vec4(1.0f, 0.0f, 0.0f, 0.5f));
 	drawRecP(800.0f - (25 + width_1 + width_2/2), 575, width_2, 30, glm::vec4(0.8f, 0.8f, 0.8f, 0.5f));
-	renderText("Tank 2", 800.0f - 85, 40, 0.4f, glm::vec3(1.0f, 1.0f, 1.0f));
+	renderText("Tank 2", 800.0f - 85, 40, 0.4f, tank2color);
 }
 
 bool UI::shotflag = false;
@@ -674,4 +681,14 @@ void UI::drawPower()
 
 	drawRecP(25 + width_1 / 2, 25, width_1, 30, glm::vec4(0.25f, 0.4f, 1.0f, 0.5f));
 	drawRecP(25 + width_1 + width_2 / 2, 25, width_2, 30, glm::vec4(0.8f, 0.8f, 0.8f, 0.5f));
+}
+
+void UI::drawCountDown(MainGameLogic *logic)
+{
+	glViewport(0, 0, RenderEngine::SCR_WIDTH, RenderEngine::SCR_HEIGHT);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	int time = (int) logic->remainingTime;
+	char timechars[20];	sprintf_s(timechars, "%d", time);
+	renderText(timechars, 380.0f, 20, 0.8f, glm::vec3(1.0f, 1.0f, 1.0f));
 }

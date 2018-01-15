@@ -123,12 +123,37 @@ MainGameLogic::~MainGameLogic()
 
 void MainGameLogic::DrawFrame(void)
 {
+
 	if (disableMenu) {
-		UI::drawBlood();
+		UI::drawBlood(turnState);
 		UI::drawPower();
+		UI::drawCountDown(this);
 	}
 
-	// ...
+	remainingTime = 15.0f - (glfwGetTime() - timeStamp);
+	if (turnState == 0 || turnState == 2) {
+		if (remainingTime <= 0.0f) {
+			changeTank();
+			timeStamp = glfwGetTime();
+			remainingTime = 15.0f;
+			if (ourModel == tank1) turnState = 0;
+			else if (ourModel == tank2) turnState = 2;
+		}
+		else if (chargeFinished) {
+			chargeFinished = false;
+			turnState += 1;
+		}
+	}
+	else if (turnState == 1 || turnState == 3) {
+		if (attackFinished) {
+			attackFinished = false;
+			changeTank();
+			timeStamp = glfwGetTime();
+			remainingTime = 15.0f;
+			if (ourModel == tank1) turnState = 0;
+			else if (ourModel == tank2) turnState = 2;
+		}
+	}
 
 	UI::screenshot();
 	if (!disableMenu)
@@ -201,6 +226,7 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 			pressSpace = false;
 			float power = UI::finishCharge();
 			std::cout << "power = " << power << std::endl;
+			chargeFinished = true;
 		}
 		// Move the camera
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -240,8 +266,8 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 			ourModel->adjustBarrelDown();
 
-		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-			changeTank();
+		/*if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+			changeTank();*/
 
 		if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
 			pressB = true;
@@ -305,4 +331,11 @@ void MainGameLogic::changeTank() {
 void MainGameLogic::closeMenu()
 {
 	disableMenu = !disableMenu;
+}
+
+void MainGameLogic::startGame()
+{
+	timeStamp = glfwGetTime();
+	turnState = 0;
+	remainingTime = 15.0f;
 }

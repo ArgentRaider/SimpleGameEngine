@@ -42,7 +42,7 @@ public:
 	static void pressEsc(MainGameLogic* mainGame);
 
 	// blood : [0, 100]
-	static void drawBlood();
+	static void drawBlood(int turnState);
 	static float getBlood(int player/* player == 1 or 2 */);
 	static void setBlood(int player, float newBlood);
 	static void addBlood(int player, float delta);
@@ -54,6 +54,9 @@ public:
 	static float getCharge(void);
 	static void setCharge(float value);
 	static void drawPower();
+
+	// count down
+	static void drawCountDown(MainGameLogic *logic);
 
 private:
 	static std::map<GLchar, Character> Characters;
