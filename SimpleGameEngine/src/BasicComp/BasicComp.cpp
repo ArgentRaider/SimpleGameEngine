@@ -23,7 +23,7 @@ void BasicComp::clear()
 	shininess = 32.0f;
 }
 
-Mesh* BasicComp::drawRect(float a, float b, float c)
+Model* BasicComp::drawRect(float a, float b, float c)
 {
 	// front
 	vertices.push_back(Vertex(glm::vec3(-a / 2, c / 2, b / 2), glm::vec3(0, 0, 1), glm::vec2(-a / 2, c / 2)));
@@ -66,12 +66,15 @@ Mesh* BasicComp::drawRect(float a, float b, float c)
 		indices.push_back(i+2);
 	}
 	setTexture();
-	Mesh* mesh = new Mesh(vertices, indices, textures, shininess);
+	Mesh mesh = Mesh(vertices, indices, textures, shininess);
+	std::vector<Mesh> meshes;	meshes.push_back(mesh);
+	Model* model = new Model(meshes);
+	model->setCollider(-a / 2, -b / 2, -c / 2, a / 2, b / 2, c / 2);
 	clear();
-	return mesh;
+	return model;
 }
 
-Mesh* BasicComp::drawSphere(float r)
+Model* BasicComp::drawSphere(float r)
 {
 	float angleA, angleB;
 	float step=2.0f;
@@ -110,7 +113,11 @@ Mesh* BasicComp::drawSphere(float r)
 		}
 	}
 	setTexture();
-	Mesh* mesh = new Mesh(vertices, indices, textures, shininess);
+
+	Mesh mesh = Mesh(vertices, indices, textures, shininess);
+	std::vector<Mesh> meshes;	meshes.push_back(mesh);
+	Model* model = new Model(meshes);
+	model->setCollider(-r / 2, -r / 2, -r / 2, r / 2, r / 2, r / 2);
 	clear();
-	return mesh;
+	return model;
 }

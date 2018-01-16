@@ -3,7 +3,7 @@
 #ifndef __BASICCOMP_H
 #define __BASICCOMP_H
 
-#include <Model/Mesh.h>
+#include <Model/Model.h>
 #include <vector>
 
 class BasicComp {
@@ -17,8 +17,9 @@ private:
 	static void clear();
 
 public:
-	static Mesh* drawRect(float a, float b, float c);
-	static Mesh* drawSphere(float r);
+	// remember to free them on your own !!!
+	static Model* drawRect(float a, float b, float c);
+	static Model* drawSphere(float r);
 };
 
 

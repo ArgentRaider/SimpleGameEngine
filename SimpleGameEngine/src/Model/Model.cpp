@@ -33,6 +33,11 @@ void Model::Rotate(float angle, glm::vec3 axis)
 	this->Front = glm::normalize(this->Front * temp);
 }
 
+void Model::setCollider(double xmin, double ymin, double zmin, double xmax, double ymax, double zmax)
+{
+	collider = Collider(xmin, ymin, zmin, xmax, ymax, zmax, this);
+}
+
 
 
 

@@ -23,7 +23,10 @@ public:
 	glm::vec3 shift;
 	
 
-	Model(std::vector<Mesh> meshes, bool hasNormalMap = false) :meshes(meshes), has_normal_map(hasNormalMap) { }
+	Model(std::vector<Mesh> meshes, bool hasNormalMap = false) :meshes(meshes), has_normal_map(hasNormalMap) {
+		Front = glm::vec4(0, 0, -1, 1);
+		shift = glm::vec3(0, 0, 0);
+	}
 	Model (){}
 
 	Model(char *path) {
@@ -50,6 +53,7 @@ public:
 	glm::mat4 getModelMatrix() const{ return this->modelMatrix; }
 	// Maybe useful in collision detection.
 	const Collider& getCollider() const { return this->collider; }
+	void setCollider(double xmin, double ymin, double zmin, double xmax, double ymax, double zmax);
 
 	float rot = 0.0f;
 

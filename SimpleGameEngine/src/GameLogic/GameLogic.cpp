@@ -318,12 +318,18 @@ void MainGameLogic::MouseCallback(GLFWwindow* window, double xPos, double yPos)
 		lastY = (float)yPos;
 
 		currentCamera->ProcessMouseMovement(xoffset, yoffset);
+		if (currentCamera->Position.y < RenderEngine::getHeight(currentCamera->Position.x, currentCamera->Position.z)) {
+			currentCamera->ProcessMouseMovement(-xoffset, -yoffset);
+		}
 	}
 }
 
 void MainGameLogic::ScrollCallback(GLFWwindow * window, double xoffset, double yoffset)
 {
 	currentCamera->ProcessMouseScroll(yoffset);
+	if (currentCamera->Position.y < RenderEngine::getHeight(currentCamera->Position.x, currentCamera->Position.z)) {
+		currentCamera->ProcessMouseScroll(-yoffset);
+	}
 }
 
 void MainGameLogic::changeTank() {
