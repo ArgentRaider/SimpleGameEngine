@@ -434,9 +434,8 @@ void UI::addBlood(int player, float delta)
 void UI::subBlood(int player, float delta)
 {
 	blood[player - 1] -= delta;
-	if (blood[player - 1] < 0) {
+	if (blood[player - 1] <= 0) {
 		blood[player - 1] = 0;
-		//renderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f));
 		MainGameLogic::turnState = 4;
 	}
 }

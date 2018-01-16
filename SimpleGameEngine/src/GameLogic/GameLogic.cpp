@@ -126,7 +126,6 @@ MainGameLogic::~MainGameLogic()
 
 void MainGameLogic::DrawFrame(void)
 {
-
 	if (disableMenu) {
 		UI::drawBlood(turnState);
 		UI::drawPower();
@@ -162,6 +161,9 @@ void MainGameLogic::DrawFrame(void)
 					else if (ourModel == tank2) turnState = 2;
 				}
 			}
+		}
+		else if (turnState == 4) {
+			UI::renderText("GAME OVER", 250, 275, 1.0);
 		}
 	}
 
@@ -227,6 +229,7 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 
 	// process keys in the game
 	else {
+		if (turnState == 4) return;
 		// prepare power of tank
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
 			UI::charge(deltaTime);
@@ -373,8 +376,9 @@ void MainGameLogic::startGame()
 	timeStamp = glfwGetTime();
 	turnState = 0;
 	remainingTime = 15.0f;
+	UI::setBlood(1, 100.0f);
+	UI::setBlood(2, 100.0f);
 }
-
 void MainGameLogic::AdaptTerrain(glm::vec3 pos, Model *tank) {
 
 
