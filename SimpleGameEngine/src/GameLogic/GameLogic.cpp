@@ -146,11 +146,18 @@ void MainGameLogic::DrawFrame(void)
 		else if (turnState == 1 || turnState == 3) {
 			if (attackFinished) {
 				attackFinished = false;
-				changeTank();
 				timeStamp = glfwGetTime();
-				remainingTime = 15.0f;
-				if (ourModel == tank1) turnState = 0;
-				else if (ourModel == tank2) turnState = 2;
+				waitForExplosion = true;
+			}
+			if (waitForExplosion) {
+				if (glfwGetTime() - timeStamp > 1.0f) {
+					waitForExplosion = false;
+					changeTank();
+					timeStamp = glfwGetTime();
+					remainingTime = 15.0f;
+					if (ourModel == tank1) turnState = 0;
+					else if (ourModel == tank2) turnState = 2;
+				}
 			}
 		}
 	}
@@ -228,6 +235,7 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 			float power = UI::finishCharge();
 			chargeFinished = true;
 			std::cout << "power = " << power << std::endl;
+			
 		}
 		// Move the camera
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {

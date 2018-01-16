@@ -84,6 +84,7 @@ private:
 	bool disableMenu = false;
 	bool chargeFinished = false;
 	bool attackFinished = false;
+	bool waitForExplosion = false;
 
 	void changeTank();
 };
