@@ -34,6 +34,9 @@
     <ClCompile Include="src\UI\UI.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\ParticleSystem\ParticleSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BasicComp\BasicComp.h">
@@ -69,6 +72,9 @@
     <ClInclude Include="src\UI\UI.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\ParticleSystem\ParticleSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\basicFragmentShader.frag">
@@ -99,6 +105,15 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="src\shaders\characterVertexShader.vertex">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="src\shaders\billboardShader.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="src\shaders\billboardShader.geo">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="src\shaders\billboardShader.vertex">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

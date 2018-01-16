@@ -87,4 +87,10 @@ public:
 	TwoDShader() :Shader("src/shaders/2DVertexShader.vertex", "src/shaders/2DFragmentShader.frag") {}
 };
 
+class BillboardShader : public Shader {
+public:
+	BillboardShader() :Shader("src/shaders/billboardShader.vertex", "src/shaders/billboardShader.frag"), geoPath("src/shaders/billboardShader.geo") {}
+	void init();
+	const GLchar* geoPath;
+};
 #endif

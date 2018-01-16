@@ -11,6 +11,7 @@
 
 #include <GameLogic/GameLogic.h>
 #include <BasicComp/BasicComp.h>
+#include <ParticleSystem/ParticleSystem.h>
 
 #define MAP_W 32
 #define MAP_SCALE 16
@@ -116,6 +117,7 @@ protected:
 	static Camera *camera;
 
 	static std::vector<ModelAndShader> models;
+	static ParticleSystem particleSystem;
 };
 
 #endif

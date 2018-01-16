@@ -129,6 +129,7 @@
     <ClCompile Include="src\Model\Mesh.cpp" />
     <ClCompile Include="src\Model\Model.cpp" />
     <ClCompile Include="src\Model\Tank\Tank.cpp" />
+    <ClCompile Include="src\ParticleSystem\ParticleSystem.cpp" />
     <ClCompile Include="src\RenderEngine\RenderEngine.cpp" />
     <ClCompile Include="src\ShaderProgram\Shader.cpp" />
     <ClCompile Include="src\UI\UI.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="src\Model\Mesh.h" />
     <ClInclude Include="src\Model\Model.h" />
     <ClInclude Include="src\Model\Tank\Tank.h" />
+    <ClInclude Include="src\ParticleSystem\ParticleSystem.h" />
     <ClInclude Include="src\RenderEngine\RenderEngine.h" />
     <ClInclude Include="src\ShaderProgram\Shader.h" />
     <ClInclude Include="src\UI\UI.h" />
@@ -151,6 +153,9 @@
     <None Include="src\shaders\2DVertexShader.vertex" />
     <None Include="src\shaders\basicFragmentShader.frag" />
     <None Include="src\shaders\basicVertexShader.vertex" />
+    <None Include="src\shaders\billboardShader.frag" />
+    <None Include="src\shaders\billboardShader.geo" />
+    <None Include="src\shaders\billboardShader.vertex" />
     <None Include="src\shaders\characterFragmentShader.frag" />
     <None Include="src\shaders\characterVertexShader.vertex" />
     <None Include="src\shaders\lightFragmentShader.frag" />

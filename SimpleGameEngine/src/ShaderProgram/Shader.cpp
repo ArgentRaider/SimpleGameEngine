@@ -233,3 +233,100 @@ void LightShader::addSpotLight(glm::vec3 position, glm::vec3 direction, glm::vec
 		linear, quadratic, cutoff, outerCutoff);
 	setInt("NR_SPOT_LIGHTS", spotNum);
 }
+
+void BillboardShader::init()
+{
+	// 1. Retrieve the source codes of both shaders from the file path
+	std::string vertexCode, fragmentCode, geoCode;
+	std::ifstream vertexFile, fragmentFile, geoFile;
+	// set the exception mask to ensure the ifstream objects can throw exceptions
+	vertexFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	fragmentFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	geoFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	try
+	{
+		// open files
+		vertexFile.open(vertexPath);
+		fragmentFile.open(fragmentPath);
+		geoFile.open(geoPath);
+		std::stringstream vertexStream, fragmentStream, geoStream;
+		// read files' buffer contents into streams
+		vertexStream << vertexFile.rdbuf();
+		fragmentStream << fragmentFile.rdbuf();
+		geoStream << geoFile.rdbuf();
+		// close file handlers
+		vertexFile.close();
+		fragmentFile.close();
+		geoFile.close();
+		// convert the string stream into string
+		vertexCode = vertexStream.str();
+		fragmentCode = fragmentStream.str();
+		geoCode = geoStream.str();
+	}
+	catch (const std::ifstream::failure e)
+	{
+		std::cout << "ERROR::SHADER::FILE_READ_FAILED" << std::endl;
+	}
+	const char* vShaderCode = vertexCode.c_str();
+	const char* fShaderCode = fragmentCode.c_str();
+	const char* gShaderCode = geoCode.c_str();
+
+	// 2. compile and link the shaders
+	unsigned int vertex, fragment, geo;
+	int success;
+	char infoLog[512];
+
+	// vertex shader
+	vertex = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertex, 1, &vShaderCode, NULL);
+	glCompileShader(vertex);
+	// print compile errors if any
+	glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(vertex, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	// fragment shader
+	fragment = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragment, 1, &fShaderCode, NULL);
+	glCompileShader(fragment);
+	glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(fragment, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	// geometry shader
+	geo = glCreateShader(GL_GEOMETRY_SHADER);
+	glShaderSource(geo, 1, &gShaderCode, NULL);
+	glCompileShader(geo);
+	glGetShaderiv(geo, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(geo, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	// shader program
+	ID = glCreateProgram();
+	glAttachShader(ID, vertex);
+	glAttachShader(ID, fragment);
+	glAttachShader(ID, geo);
+	glLinkProgram(ID);
+	// print linking errors if any
+	glGetProgramiv(ID, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		glGetProgramInfoLog(ID, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+	}
+
+	// delete the shaders as they are no longer needed
+	glDeleteShader(vertex);
+	glDeleteShader(fragment);
+	glDeleteShader(geo);
+}
+

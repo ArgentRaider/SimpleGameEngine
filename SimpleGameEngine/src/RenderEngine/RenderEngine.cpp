@@ -28,7 +28,7 @@ TwoDShader RenderEngine::twoDShader;
 Camera* RenderEngine::camera = nullptr;
 std::vector<ModelAndShader> RenderEngine::models;
 std::vector<const Collider*> RenderEngine::collideWorld;
-
+ParticleSystem RenderEngine::particleSystem;
 
 void _default_framebuffer_size_callback(GLFWwindow * window, int width, int height);
 
@@ -66,6 +66,7 @@ bool RenderEngine::init(std::string title)
 	RenderEngine::defaultShader.init();
 	RenderEngine::characterShader.init();
 	RenderEngine::twoDShader.init();
+	RenderEngine::particleSystem.init(glm::vec3(0, 31, 0));
 	return true;
 }
 
@@ -102,7 +103,8 @@ void RenderEngine::run()
 			glBindVertexArray(0);
 			glDepthMask(GL_TRUE);
 		}
-
+		// Draw explosion
+		particleSystem.Render(projection*view, camera->Position);
 		// render
 		// Draw models
 		for (ModelAndShader m : models) {
