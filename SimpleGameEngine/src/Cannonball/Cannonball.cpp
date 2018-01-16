@@ -21,7 +21,8 @@ void Cannonball::set(Model* model, glm::vec3 v0, glm::vec3 pos0)
 {
 	this->v = v0;
 	this->pos = pos0;
-	
+	pos += glm::vec3(0, 0.3, 0);
+	pos += glm::normalize(v0)*1.2f;
 	model->Translate(pos);
 	this->model = model;
 	RenderEngine::addModel(*model);
@@ -46,7 +47,6 @@ void Cannonball::Render()
 			RenderEngine::particleSystem.initParticles(pos);
 			init();
 			MainGameLogic::attackFinished = true;
-		
 		}
 		else
 		{

@@ -239,7 +239,7 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 			chargeFinished = true;
 			//printf("%f,%f,%f\n", ourModel->barrel->Front.x, ourModel->barrel->Front.y, ourModel->barrel->Front.z);
 			glm::vec4 temp = glm::vec4(-ourModel->barrel->Front.x, ourModel->barrel->Front.y, ourModel->barrel->Front.z, ourModel->barrel->Front.w);
-			RenderEngine::cball.set(BasicComp::drawSphere(0.1f), temp*power*0.5f, ourModel->shift+glm::vec3(0,0.2,0));
+			RenderEngine::cball.set(BasicComp::drawSphere(0.1f), temp*power*0.5f, ourModel->shift);
 		}
 		// Move the camera
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
