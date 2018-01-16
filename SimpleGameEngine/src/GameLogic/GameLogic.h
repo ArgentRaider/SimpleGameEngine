@@ -49,12 +49,13 @@ public:
 
 	float timeStamp;
 	float remainingTime;
-	int turnState = 0;
+	static int turnState;
 	// turnState: 
 	//	case 0: tank 1 counting
 	//	case 1: tank 1 attacking
 	//	case 2: tank 2 counting
 	//	case 3: tank 2 attacking
+	static bool attackFinished;
 private:
 	// Shader(s)
 	LightShader *ourShader;
@@ -83,7 +84,6 @@ private:
 	bool firstMouse = true;
 	bool disableMenu = false;
 	bool chargeFinished = false;
-	bool attackFinished = false;
 	bool waitForExplosion = false;
 
 	void changeTank();

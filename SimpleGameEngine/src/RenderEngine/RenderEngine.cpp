@@ -29,6 +29,7 @@ Camera* RenderEngine::camera = nullptr;
 std::vector<ModelAndShader> RenderEngine::models;
 std::vector<const Collider*> RenderEngine::collideWorld;
 ParticleSystem RenderEngine::particleSystem;
+Cannonball RenderEngine::cball;
 
 void _default_framebuffer_size_callback(GLFWwindow * window, int width, int height);
 
@@ -66,7 +67,7 @@ bool RenderEngine::init(std::string title)
 	RenderEngine::defaultShader.init();
 	RenderEngine::characterShader.init();
 	RenderEngine::twoDShader.init();
-	RenderEngine::particleSystem.init(glm::vec3(0, 31, 0));
+	RenderEngine::particleSystem.init();
 	return true;
 }
 
@@ -103,6 +104,8 @@ void RenderEngine::run()
 			glBindVertexArray(0);
 			glDepthMask(GL_TRUE);
 		}
+		// Draw cannonball
+		cball.Render();
 		// Draw explosion
 		particleSystem.Render(projection*view, camera->Position);
 		// render
@@ -402,13 +405,22 @@ void RenderEngine::addModel(Model & model, bool triggerCollision, const Shader& 
 
 bool RenderEngine::deleteModel(Model & model)
 {
+	bool res = false;
 	for (std::vector<ModelAndShader>::iterator i = models.begin(); i != models.end(); i++) {
 		if ((*i).first == &model) {
 			models.erase(i);
-			return true;
+			res = true;
+			break;
 		}
 	}
-	return false;
+	for (std::vector<const Collider*>::iterator i = collideWorld.begin(); i != collideWorld.end(); i++) {
+		if (*i == &(model.getCollider())) {
+			collideWorld.erase(i);
+			break;
+		}
+
+	}
+	return res;
 }
 
 void RenderEngine::FramebufferSizeCallback(GLFWwindow * window, int width, int height)

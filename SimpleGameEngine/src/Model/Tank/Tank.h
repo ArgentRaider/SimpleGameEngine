@@ -19,7 +19,6 @@ public:
 	void adjustBarrelDown();
 
 	void backout();
-protected:
 	Model *barrel = nullptr;
 };
 

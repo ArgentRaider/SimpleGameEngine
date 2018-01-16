@@ -37,6 +37,9 @@
     <ClCompile Include="src\ParticleSystem\ParticleSystem.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\Cannonball\Cannonball.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BasicComp\BasicComp.h">
@@ -73,6 +76,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\ParticleSystem\ParticleSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cannonball\Cannonball.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

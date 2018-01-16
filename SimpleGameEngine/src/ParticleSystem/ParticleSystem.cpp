@@ -9,23 +9,10 @@ ParticleSystem::ParticleSystem()
 	srand((unsigned int)(time(NULL)));
 }
 
-void ParticleSystem::init(const glm::vec3& Pos)
+void ParticleSystem::init()
 {
 	Particles = std::vector<Particle>();
 	initRandomVec3(10000);
-	// generate initial particles
-	for (int i = 0; i < MAX_PARTICLES; i++)
-	{
-		Particle tmp;
-		// 0.03-0.07
-		tmp.Size = (rand() % 5 + 3)*0.01f;
-		// +/-1
-		tmp.Pos = Pos;
-		tmp.Pos += glm::vec3(rand()*0.25f / RAND_MAX - 0.125f, rand()*0.25f / RAND_MAX - 0.125f, rand()*0.25f / RAND_MAX - 0.125f);
-		// all directions
-		tmp.Vel = randomVec3[rand() % 10000] * 2.0f;
-		Particles.push_back(tmp);
-	}
 	
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
@@ -56,6 +43,22 @@ void ParticleSystem::init(const glm::vec3& Pos)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+}
+
+void ParticleSystem::initParticles(const glm::vec3& Pos)
+{
+	for (int i = 0; i < MAX_PARTICLES; i++)
+	{
+		Particle tmp;
+		// 0.03-0.07
+		tmp.Size = (rand() % 5 + 3)*0.01f;
+		// +/-1
+		tmp.Pos = Pos;
+		tmp.Pos += glm::vec3(rand()*0.25f / RAND_MAX - 0.125f, rand()*0.25f / RAND_MAX - 0.125f, rand()*0.25f / RAND_MAX - 0.125f);
+		// all directions
+		tmp.Vel = randomVec3[rand() % 10000] * 2.0f;
+		Particles.push_back(tmp);
+	}
 }
 
 void ParticleSystem::Render(const glm::mat4& VP, const glm::vec3& CameraPos)

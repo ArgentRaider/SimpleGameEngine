@@ -5,6 +5,9 @@
 
 #include <RenderEngine/RenderEngine.h>
 
+bool MainGameLogic::attackFinished = false;
+int MainGameLogic::turnState = 0;
+
 MainGameLogic::MainGameLogic()
 {
 	// set a shader using Phong illumination model
@@ -234,8 +237,9 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 			pressSpace = false;
 			float power = UI::finishCharge();
 			chargeFinished = true;
-			std::cout << "power = " << power << std::endl;
-			
+			//printf("%f,%f,%f\n", ourModel->barrel->Front.x, ourModel->barrel->Front.y, ourModel->barrel->Front.z);
+			glm::vec4 temp = glm::vec4(-ourModel->barrel->Front.x, ourModel->barrel->Front.y, ourModel->barrel->Front.z, ourModel->barrel->Front.w);
+			RenderEngine::cball.set(BasicComp::drawSphere(0.1f), temp*power*0.5f, ourModel->shift+glm::vec3(0,0.2,0));
 		}
 		// Move the camera
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -346,7 +350,6 @@ void MainGameLogic::changeTank() {
 	if (ourModel == tank1) {
 		Sleep(100);
 		ourModel = tank2;
-		printf("Tank2\n");
 		currentCamera = camera2;
 		RenderEngine::setCamera(currentCamera->camera);
 	}
@@ -354,7 +357,6 @@ void MainGameLogic::changeTank() {
 	{
 		Sleep(100);
 		ourModel = tank1;
-		printf("Tank1\n");
 		currentCamera = camera1;
 		RenderEngine::setCamera(currentCamera->camera);
 	}

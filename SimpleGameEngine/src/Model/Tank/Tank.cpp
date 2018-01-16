@@ -37,7 +37,7 @@ void Tank::Rotate(float angle, glm::vec3 axis, int type, int adapt)
 	if (adapt == UNADAPT)
 		this->Front = glm::normalize(this->Front * temp);
 
-	printf("FRONT:   %lf  %lf  %lf  %lf\n", Front.x, Front.y, Front.z, Front.w);
+	//printf("FRONT:   %lf  %lf  %lf  %lf\n", Front.x, Front.y, Front.z, Front.w);
 
 	if (nullptr != barrel) {
 		barrel->modelMatrix = glm::rotate(barrel->modelMatrix, radian, axis);
@@ -48,15 +48,15 @@ void Tank::Rotate(float angle, glm::vec3 axis, int type, int adapt)
 
 void Tank::adjustBarrelUp() {
 	if (nullptr != barrel) {
-		barrel->Rotate(0.1, glm::vec3(1.0f, 0.0f, 0.0f), ANGLE, UNADAPT);
-		barrel->rot += 0.1;
+		barrel->Rotate(0.2, glm::vec3(1.0f, 0.0f, 0.0f), ANGLE, UNADAPT);
+		barrel->rot += 0.2;
 	}
 }
 
 void Tank::adjustBarrelDown() {
 	if (nullptr != barrel) {
-		barrel->Rotate(-0.1, glm::vec3(1.0f, 0.0f, 0.0f), ANGLE, UNADAPT);
-		barrel->rot -= 0.1;
+		barrel->Rotate(-0.2, glm::vec3(1.0f, 0.0f, 0.0f), ANGLE, UNADAPT);
+		barrel->rot -= 0.2;
 	}
 }
 

@@ -25,7 +25,8 @@ struct Particle {
 class ParticleSystem {
 public:
 	ParticleSystem();
-	void init(const glm::vec3& Pos);
+	void init();
+	void initParticles(const glm::vec3& Pos);
 	void Render(const glm::mat4& VP, const glm::vec3& CameraPos);
 private:
 	void RenderParticles(const glm::mat4& VP, const glm::vec3& CameraPos);

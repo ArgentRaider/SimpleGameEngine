@@ -12,6 +12,7 @@
 #include <GameLogic/GameLogic.h>
 #include <BasicComp/BasicComp.h>
 #include <ParticleSystem/ParticleSystem.h>
+#include <Cannonball/Cannonball.h>
 
 #define MAP_W 32
 #define MAP_SCALE 16
@@ -83,7 +84,8 @@ public:
 		float constant, float linear, float quadratic, float cutoff, float outerCutoff);
 	static void addSpotLight(glm::vec3 position, glm::vec3 direction, glm::vec3 diffuse, glm::vec3 specular,
 		float constant, float linear, float quadratic, float cutoff, float outerCutoff);
-
+	static Cannonball cball;
+	static ParticleSystem particleSystem;
 protected:
 	// game logic
 	static GameLogic* currentLogic;
@@ -117,7 +119,6 @@ protected:
 	static Camera *camera;
 
 	static std::vector<ModelAndShader> models;
-	static ParticleSystem particleSystem;
 };
 
 #endif

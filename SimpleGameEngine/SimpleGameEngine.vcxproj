@@ -122,6 +122,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\BasicComp\BasicComp.cpp" />
+    <ClCompile Include="src\Cannonball\Cannonball.cpp" />
     <ClCompile Include="src\Collider\Collider.cpp" />
     <ClCompile Include="src\GameLogic\GameLogic.cpp" />
     <ClCompile Include="src\glad.c" />
@@ -138,6 +139,7 @@
     <ClInclude Include="src\BasicComp\BasicComp.h" />
     <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\Camera\ThirdPersonCamera.h" />
+    <ClInclude Include="src\Cannonball\Cannonball.h" />
     <ClInclude Include="src\Collider\Collider.h" />
     <ClInclude Include="src\GameLogic\GameLogic.h" />
     <ClInclude Include="src\Model\Mesh.h" />
