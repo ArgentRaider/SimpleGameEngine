@@ -18,6 +18,8 @@
 class GameLogic
 {
 public:
+	float d = 0.0;
+	float r = 0.0;
 
 	void FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
 		glViewport(0, 0, width, height);
@@ -31,7 +33,7 @@ public:
 
 
 // This is an example logic so I decide to put it here.
-class MainGameLogic :public GameLogic 
+class MainGameLogic :public GameLogic
 {
 public:
 	MainGameLogic();	// Set all things you need,
@@ -43,6 +45,7 @@ public:
 	void DrawFrame(void);
 	void closeMenu();
 	void startGame();
+	void AdaptTerrain(glm::vec3 pos, Model *tank);
 
 	float timeStamp;
 	float remainingTime;
@@ -61,7 +64,7 @@ private:
 	ThirdPersonCamera *camera1;
 	ThirdPersonCamera *camera2;
 	//Camera *camera;
-	
+
 	// Model(s)
 	Tank *ourModel;
 	Tank *tank1;

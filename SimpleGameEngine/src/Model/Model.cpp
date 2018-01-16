@@ -4,7 +4,7 @@
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 
-void Model::Draw(const Shader& shader) 
+void Model::Draw(const Shader& shader)
 {
 	for (Mesh mesh : meshes) {
 		mesh.Draw(shader);
@@ -22,15 +22,26 @@ void Model::Scale(glm::vec3 scale)
 
 }
 
-void Model::Rotate(float angle, glm::vec3 axis)
+void Model::Rotate(float angle, glm::vec3 axis, int type, int adapt)
 {
 	// In rotation we multiply the rotate matrix on the right side!
 	// Since we always want the model to rotate in its local coordinate system, 
 	//	not in the world coordinate system!
-	this->modelMatrix = glm::rotate(this->modelMatrix, glm::radians(angle), axis);
-	glm::mat4 temp;
-	temp = glm::rotate(temp, glm::radians(angle), axis);
-	this->Front = glm::normalize(this->Front * temp);
+	float radian = 0.0;
+	if (type == RADIAN) {
+		radian = angle;
+	}
+	else
+	{
+		radian = glm::radians(angle);
+	}
+
+	this->modelMatrix = glm::rotate(this->modelMatrix, radian, axis);
+	if (adapt == UNADAPT) {
+		glm::mat4 temp;
+		temp = glm::rotate(temp, radian, axis);
+		this->Front = glm::normalize(this->Front * temp);
+	}
 }
 
 void Model::setCollider(double xmin, double ymin, double zmin, double xmax, double ymax, double zmax)
@@ -46,7 +57,7 @@ Model::~Model()
 {
 }
 
-void Model::loadModel(std::string path) 
+void Model::loadModel(std::string path)
 {
 	Assimp::Importer importer;
 	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
@@ -55,7 +66,7 @@ void Model::loadModel(std::string path)
 		return;
 	}
 	directory = path.substr(0, path.find_last_of('/'));
-	
+
 	processNode(scene->mRootNode, scene);
 }
 
@@ -170,16 +181,16 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 		material->Get(AI_MATKEY_SHININESS, shininess);
 		shininess /= 10;
 
-		std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, 
-																Texture::DiffuseType);
+		std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE,
+			Texture::DiffuseType);
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-		
+
 		std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR,
-																Texture::SpecularType);
+			Texture::SpecularType);
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
 		std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT,
-																Texture::NormalType);
+			Texture::NormalType);
 		if (normalMaps.size() == 0) {
 			has_normal_map = false;
 		}
@@ -188,12 +199,12 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 			textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 		}
 	}
-	
+
 	return Mesh(vertices, indices, textures, shininess);
 }
 
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
-													std::string typeName)
+	std::string typeName)
 {
 	std::vector<Texture> textures;
 	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
@@ -213,7 +224,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
 			texture.type = typeName;
 			texture.path = str.C_Str();
 			textures.push_back(texture);
-		}		
+		}
 	}
 	return textures;
 }

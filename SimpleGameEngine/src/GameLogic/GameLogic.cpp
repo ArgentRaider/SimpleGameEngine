@@ -28,15 +28,15 @@ MainGameLogic::MainGameLogic()
 
 	// adjust our model
 	double deltay1 = -tank1->getCollider().ymin;
-	tank1->Translate(glm::vec3(0.0f, deltay1+30/0.2, 0.0f));
+	tank1->Translate(glm::vec3(0.0f, deltay1 + 30 / 0.2, 0.0f));
 	tank1->Scale(glm::vec3(0.2f, 0.2f, 0.2f));
 
 	double deltay2 = -tank2->getCollider().ymin;
-	tank2->Translate(glm::vec3(50.0f, deltay2+29.625/0.2, 50.0f));
+	tank2->Translate(glm::vec3(50.0f, deltay2 + 29.625 / 0.2, 50.0f));
 	tank2->Scale(glm::vec3(0.2f, 0.2f, 0.2f));
 
-	tank1->Rotate(180, glm::vec3(0.0, 1.0, 0.0));
-	tank2->Rotate(180, glm::vec3(0.0, 1.0, 0.0));
+	tank1->Rotate(180, glm::vec3(0.0, 1.0, 0.0), ANGLE, UNADAPT);
+	tank2->Rotate(180, glm::vec3(0.0, 1.0, 0.0), ANGLE, UNADAPT);
 
 	// add it to display
 	RenderEngine::addModel(*tank1);
@@ -82,17 +82,17 @@ MainGameLogic::MainGameLogic()
 	// Draw a rectangle using self-defined data
 	/*
 	Vertex topRight(glm::vec3(50.0f, 0.0f, 50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f)),
-		bottomRight(glm::vec3(50.0f, 0.0f, -50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
-		topLeft(glm::vec3(-50.0f, 0.0f, 50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f)),
-		bottomLeft(glm::vec3(-50.0f, 0.0f, -50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f));
-	topRight.Tangent = bottomLeft.Tangent = bottomRight.Tangent = topLeft.Tangent 
-		= glm::vec3(1.0f, 0.0f, 0.0f);
-	topRight.Bitangent = bottomLeft.Bitangent = bottomRight.Bitangent = topLeft.Bitangent 
-		= glm::vec3(0.0f, 0.0f, 1.0f);
+	bottomRight(glm::vec3(50.0f, 0.0f, -50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)),
+	topLeft(glm::vec3(-50.0f, 0.0f, 50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f)),
+	bottomLeft(glm::vec3(-50.0f, 0.0f, -50.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f));
+	topRight.Tangent = bottomLeft.Tangent = bottomRight.Tangent = topLeft.Tangent
+	= glm::vec3(1.0f, 0.0f, 0.0f);
+	topRight.Bitangent = bottomLeft.Bitangent = bottomRight.Bitangent = topLeft.Bitangent
+	= glm::vec3(0.0f, 0.0f, 1.0f);
 	std::vector<Vertex> vertices = { topRight, bottomRight, topLeft, bottomLeft };
 	std::vector<unsigned int> indices = {
-		0, 1, 2,
-		1, 2, 3,
+	0, 1, 2,
+	1, 2, 3,
 	};
 	diffuseMap = Texture::TextureFromFile("brickwall.jpg", "res/textures");
 	specularMap = Texture::TextureFromFile("brickwall.jpg", "res/textures");
@@ -216,7 +216,7 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 	}
 
 	// process keys in the game
-	else{
+	else {
 		// prepare power of tank
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
 			UI::charge(deltaTime);
@@ -231,13 +231,13 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 		}
 		// Move the camera
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			
+
 			float x0 = ourModel->shift.x;
 			float y0 = ourModel->shift.y;
 			float z0 = ourModel->shift.z;
 			float x1 = ourModel->shift.x - ourModel->Front.x * 6.0f * deltaTime;
 			float z1 = ourModel->shift.z + ourModel->Front.z * 6.0f * deltaTime;
-			float y1 = RenderEngine::getHeight(x1, z1);			
+			float y1 = RenderEngine::getHeight(x1, z1);
 			ourModel->Translate(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
 			if (RenderEngine::existCollision(ourModel)) {
 				ourModel->Translate(glm::vec3(x0 - x1, y0 - y1, z0 - z1));
@@ -246,6 +246,7 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 				ourModel->shift = glm::vec3(x1, y1, z1);
 				currentCamera->ProcessKeyboard(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
 			}
+			AdaptTerrain(ourModel->shift, ourModel);
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 
@@ -254,7 +255,7 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 			float z0 = ourModel->shift.z;
 			float x1 = ourModel->shift.x + ourModel->Front.x * 6.0f * deltaTime;
 			float z1 = ourModel->shift.z - ourModel->Front.z * 6.0f * deltaTime;
-			float y1 = RenderEngine::getHeight(x1, z1);		
+			float y1 = RenderEngine::getHeight(x1, z1);
 			ourModel->Translate(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
 			if (RenderEngine::existCollision(ourModel)) {
 				ourModel->Translate(glm::vec3(x0 - x1, y0 - y1, z0 - z1));
@@ -263,18 +264,19 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 				ourModel->shift = glm::vec3(x1, y1, z1);
 				currentCamera->ProcessKeyboard(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
 			}
+			AdaptTerrain(ourModel->shift, ourModel);
 		}
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			ourModel->Rotate(rotateDelt, glm::vec3(0, 1.0f, 0));
+			ourModel->Rotate(rotateDelt, glm::vec3(0, 1.0f, 0), ANGLE, UNADAPT);
 			if (RenderEngine::existCollision(ourModel)) {
-				ourModel->Rotate(-rotateDelt, glm::vec3(0, 1.0f, 0));
+				ourModel->Rotate(-rotateDelt, glm::vec3(0, 1.0f, 0), ANGLE, UNADAPT);
 			}
 			ourModel->backout();
 		}
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			ourModel->Rotate(-rotateDelt, glm::vec3(0, 1.0f, 0));
+			ourModel->Rotate(-rotateDelt, glm::vec3(0, 1.0f, 0), ANGLE, UNADAPT);
 			if (RenderEngine::existCollision(ourModel)) {
-				ourModel->Rotate(rotateDelt, glm::vec3(0, 1.0f, 0));
+				ourModel->Rotate(rotateDelt, glm::vec3(0, 1.0f, 0), ANGLE, UNADAPT);
 			}
 			ourModel->backout();
 		}
@@ -284,7 +286,7 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 			ourModel->adjustBarrelDown();
 
 		/*if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-			changeTank();*/
+		changeTank();*/
 
 		if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
 			pressB = true;
@@ -340,7 +342,7 @@ void MainGameLogic::changeTank() {
 		currentCamera = camera2;
 		RenderEngine::setCamera(currentCamera->camera);
 	}
-	else if(ourModel == tank2)
+	else if (ourModel == tank2)
 	{
 		Sleep(100);
 		ourModel = tank1;
@@ -361,4 +363,67 @@ void MainGameLogic::startGame()
 	timeStamp = glfwGetTime();
 	turnState = 0;
 	remainingTime = 15.0f;
+}
+
+void MainGameLogic::AdaptTerrain(glm::vec3 pos, Model *tank) {
+
+
+	glm::vec3 normalTerrain = RenderEngine::getNormal(pos.x, pos.z);
+	glm::vec3 tn = glm::normalize(glm::vec3(0.0, normalTerrain.y, normalTerrain.z));
+	glm::vec3 v;
+
+	glm::mat4 temp0;
+
+	v = glm::normalize(glm::vec3(tank->normal.x, tank->normal.y, 0.0));
+	float cosRadian = abs(v.x / v.y);
+	float dir = v.x;
+
+	if (d < 0) {
+		tank->Rotate(-r, glm::vec3(0.0, 0.0, 1.0), RADIAN, ADAPT);
+		temp0 = glm::rotate(temp0, -r, glm::vec3(0.0, 0.0, 1.0));
+	}
+	else if (d > 0) {
+		tank->Rotate(r, glm::vec3(0.0, 0.0, 1.0), RADIAN, ADAPT);
+		temp0 = glm::rotate(temp0, r, glm::vec3(0.0, 0.0, 1.0));
+	}
+
+	glm::mat4 temp1;
+	v = glm::normalize(glm::vec3(0.0, normalTerrain.y, normalTerrain.z));
+	cosRadian = abs(v.z / v.y);
+	dir = tank->normal.z - v.z;
+
+	if (dir < -0.1) {
+		tank->Rotate(-glm::atan(cosRadian), glm::vec3(1.0, 0.0, 0.0), RADIAN, ADAPT);
+		temp1 = glm::rotate(temp1, -glm::atan(cosRadian), glm::vec3(1.0, 0.0, 0.0));
+	}
+	else if (dir > 0.1) {
+		tank->Rotate(glm::atan(cosRadian), glm::vec3(1.0, 0.0, 0.0), RADIAN, ADAPT);
+		temp1 = glm::rotate(temp1, glm::atan(cosRadian), glm::vec3(1.0, 0.0, 0.0));
+	}
+	if (dir < -0.1 || dir > 0.1) {
+		glm::vec4 vTemp;
+		vTemp = (glm::vec4(tank->normal, 1.0) * temp1);
+		vTemp = vTemp / vTemp.w;
+		tank->normal = glm::normalize(glm::vec3(vTemp.x, vTemp.y, vTemp.z));
+	}
+
+
+	glm::mat4 temp2;
+	v = glm::normalize(glm::vec3(normalTerrain.x, normalTerrain.y, 0.0));
+	cosRadian = abs(v.x / v.y);
+	dir = tank->normal.x - v.x;
+
+
+	if (dir < 0) {
+		tank->Rotate(glm::atan(cosRadian), glm::vec3(0.0, 0.0, 1.0), RADIAN, ADAPT);
+		temp2 = glm::rotate(temp2, glm::atan(cosRadian), glm::vec3(0.0, 0.0, 1.0));
+	}
+	else if (dir > 0) {
+		tank->Rotate(-glm::atan(cosRadian), glm::vec3(0.0, 0.0, 1.0), RADIAN, ADAPT);
+		temp2 = glm::rotate(temp2, -glm::atan(cosRadian), glm::vec3(0.0, 0.0, 1.0));
+	}
+
+	d = dir;
+	r = glm::atan(cosRadian);
+
 }
