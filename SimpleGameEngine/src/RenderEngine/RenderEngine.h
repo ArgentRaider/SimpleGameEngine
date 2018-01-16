@@ -64,8 +64,12 @@ public:
 	static void setNormalMapRender(bool set);
 
 	// adjust models to display
-	static void addModel(Model& model, const Shader& shader = defaultShader);
+	static void addModel(Model& model, bool triggerCollision = true, const Shader& shader = defaultShader);
 	static bool deleteModel(Model& model);
+
+	// world of collider
+	static std::vector<const Collider*> collideWorld;
+	static bool existCollision(const Model*);
 
 	// adjust lights (methods from defaultShader)
 	static void setDirLight(int index, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular);
@@ -98,6 +102,8 @@ protected:
 	static bool useNormalMap;
 
 	static std::vector<Vertex> terrainVertices;
+
+	
 
 
 	// caller functions

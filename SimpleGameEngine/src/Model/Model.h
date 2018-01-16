@@ -47,9 +47,9 @@ public:
 	virtual void Rotate(float radians, glm::vec3 axis);
 
 
-	glm::mat4 getModelMatrix() { return this->modelMatrix; }
+	glm::mat4 getModelMatrix() const{ return this->modelMatrix; }
 	// Maybe useful in collision detection.
-	Collider getCollider() { return this->collider; }
+	const Collider& getCollider() const { return this->collider; }
 
 	float rot = 0.0f;
 

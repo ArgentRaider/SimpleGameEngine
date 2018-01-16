@@ -135,9 +135,6 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 	// deal with index
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
 		aiFace face = mesh->mFaces[i];
-#ifndef NDEBUG
-		assert(face.mNumIndices == 3);
-#endif // !NDEBUG
 		for (unsigned int j = 0; j < face.mNumIndices; j++) {
 			indices.push_back(face.mIndices[j]);
 		}

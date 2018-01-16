@@ -89,6 +89,18 @@
     <None Include="src\shaders\skyboxShader.vertex">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="src\shaders\2DFragmentShader.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="src\shaders\2DVertexShader.vertex">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="src\shaders\characterFragmentShader.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="src\shaders\characterVertexShader.vertex">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="头文件">

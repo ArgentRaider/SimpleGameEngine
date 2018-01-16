@@ -25,7 +25,7 @@ MainGameLogic::MainGameLogic()
 	tank1->addBarrel(barrel1);
 	tank2->addBarrel(barrel2);
 	ourModel = tank1;
-	//ourModel = new Model("res/models/A-32/a-32_hull.obj");
+
 	// adjust our model
 	double deltay1 = -tank1->getCollider().ymin;
 	tank1->Translate(glm::vec3(0.0f, deltay1+30/0.2, 0.0f));
@@ -40,9 +40,9 @@ MainGameLogic::MainGameLogic()
 
 	// add it to display
 	RenderEngine::addModel(*tank1);
-	RenderEngine::addModel(*barrel1);
+	RenderEngine::addModel(*barrel1, false);
 	RenderEngine::addModel(*tank2);
-	RenderEngine::addModel(*barrel2);
+	RenderEngine::addModel(*barrel2, false);
 
 	// add a third-person camera following our nanosuit model!
 	camera1 = new ThirdPersonCamera(*tank1);
@@ -237,10 +237,15 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 			float z0 = ourModel->shift.z;
 			float x1 = ourModel->shift.x - ourModel->Front.x * 6.0f * deltaTime;
 			float z1 = ourModel->shift.z + ourModel->Front.z * 6.0f * deltaTime;
-			float y1 = RenderEngine::getHeight(x1, z1);
-			currentCamera->ProcessKeyboard(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
+			float y1 = RenderEngine::getHeight(x1, z1);			
 			ourModel->Translate(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
-			ourModel->shift=glm::vec3(x1,y1,z1);
+			if (RenderEngine::existCollision(ourModel)) {
+				ourModel->Translate(glm::vec3(x0 - x1, y0 - y1, z0 - z1));
+			}
+			else {
+				ourModel->shift = glm::vec3(x1, y1, z1);
+				currentCamera->ProcessKeyboard(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
+			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 
@@ -249,17 +254,28 @@ void MainGameLogic::ProcessInput(GLFWwindow* window, float deltaTime)
 			float z0 = ourModel->shift.z;
 			float x1 = ourModel->shift.x + ourModel->Front.x * 6.0f * deltaTime;
 			float z1 = ourModel->shift.z - ourModel->Front.z * 6.0f * deltaTime;
-			float y1 = RenderEngine::getHeight(x1, z1);
-			currentCamera->ProcessKeyboard(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
+			float y1 = RenderEngine::getHeight(x1, z1);		
 			ourModel->Translate(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
-			ourModel->shift = glm::vec3(x1, y1, z1);
+			if (RenderEngine::existCollision(ourModel)) {
+				ourModel->Translate(glm::vec3(x0 - x1, y0 - y1, z0 - z1));
+			}
+			else {
+				ourModel->shift = glm::vec3(x1, y1, z1);
+				currentCamera->ProcessKeyboard(glm::vec3(x1 - x0, y1 - y0, z1 - z0));
+			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 			ourModel->Rotate(rotateDelt, glm::vec3(0, 1.0f, 0));
+			if (RenderEngine::existCollision(ourModel)) {
+				ourModel->Rotate(-rotateDelt, glm::vec3(0, 1.0f, 0));
+			}
 			ourModel->backout();
 		}
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 			ourModel->Rotate(-rotateDelt, glm::vec3(0, 1.0f, 0));
+			if (RenderEngine::existCollision(ourModel)) {
+				ourModel->Rotate(rotateDelt, glm::vec3(0, 1.0f, 0));
+			}
 			ourModel->backout();
 		}
 		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)

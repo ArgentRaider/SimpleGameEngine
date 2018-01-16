@@ -27,6 +27,7 @@ TwoDShader RenderEngine::twoDShader;
 
 Camera* RenderEngine::camera = nullptr;
 std::vector<ModelAndShader> RenderEngine::models;
+std::vector<const Collider*> RenderEngine::collideWorld;
 
 
 void _default_framebuffer_size_callback(GLFWwindow * window, int width, int height);
@@ -324,7 +325,7 @@ void RenderEngine::setTerrain(const std::string& path, const std::string& height
 	std::vector<Mesh> meshes;
 	meshes.push_back(terrain);
 	Model* terrainModel = new Model(meshes);
-	addModel(*terrainModel);
+	addModel(*terrainModel, false);
 }
 
 float RenderEngine::getHeight(float x, float z)
@@ -389,9 +390,12 @@ void RenderEngine::setNormalMapRender(bool set)
 	useNormalMap = set;
 }
 
-void RenderEngine::addModel(Model & model, const Shader& shader)
+void RenderEngine::addModel(Model & model, bool triggerCollision, const Shader& shader)
 {
 	models.push_back(std::pair<Model*, const Shader*>(&model, &shader));
+	if (triggerCollision) {
+		collideWorld.push_back(&(model.getCollider()));
+	}
 }
 
 bool RenderEngine::deleteModel(Model & model)
@@ -446,6 +450,19 @@ void RenderEngine::DrawFrame(void)
 void _default_framebuffer_size_callback(GLFWwindow * window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+}
+
+bool RenderEngine::existCollision(const Model *model)
+{
+	for (std::vector<const Collider*>::iterator i = collideWorld.begin(); i != collideWorld.end(); i++) {
+		const Collider& me = model->getCollider();
+		if ((*i) == &(model->getCollider())) {
+			continue;
+		}
+		if (ifCollide(me, *(*i)))
+			return true;
+	}
+	return false;
 }
 
 void RenderEngine::setDirLight(int index, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) {
